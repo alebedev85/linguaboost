@@ -1,0 +1,40 @@
+.mainContainer {
+  flex: 1;
+  max-width: 1152px; // 6xl масштаб
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.loadingScreen {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingContent {
+  text-align: center;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  height: 48px;
+  width: 48px;
+  border: 2px solid transparent;
+  border-top-color: var(--color-emerald);
+  border-bottom-color: var(--color-emerald);
+  margin: 0 auto;
+}
+
+.loadingText {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

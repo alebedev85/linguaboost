@@ -1,0 +1,33 @@
+@use "./_variables.scss" as *;
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+  background: none;
+  border: none;
+  
+  &:focus {
+    outline: none;
+  }
+}

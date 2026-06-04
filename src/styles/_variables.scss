@@ -1,0 +1,21 @@
+:root {
+  // Цветовая палитра Slate-950 (Космическая тема)
+  --bg-main: #020617;
+  --bg-surface: #0f172a;
+  --bg-card: #1e293b;
+
+  // Акценты из ТЗ
+  --color-emerald: #10b981;  // Успех, кнопки действий
+  --color-indigo: #4f46e5;   // Профили
+  --color-rose: #f43f5e;     // Ошибки
+  --color-amber: #f59e0b;    // Предупреждения
+
+  // Текст
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  // Border Radius (Исключаем магические цифры)
+  --radius-xl: 12px;         // Инпуты, маленькие карточки
+  --radius-3xl: 24px;        // Крупные блоки, модалки
+}
