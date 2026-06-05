@@ -1,0 +1,89 @@
+.card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--bg-card);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-xl);
+  max-width: 32rem;
+  margin: var(--space-xl) auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xl);
+  color: var(--text-primary);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.inputWrapper {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.input, .textarea {
+  width: 100%;
+  background-color: var(--bg-main);
+  border: 1px solid var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+
+  &:focus {
+    border-color: var(--color-emerald);
+    box-shadow: 0 0 0 1px var(--color-emerald);
+  }
+}
+
+.textarea {
+  resize: none;
+  height: 6rem;
+}
+
+.aiButton {
+  background-color: var(--bg-card);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--color-emerald-light);
+  padding: 0 1rem;
+  border-radius: var(--radius-xl);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+
+  &:hover {
+    background-color: rgba(16, 185, 129, 0.1);
+  }
+}
+
+.submitButton {
+  width: 100%;
+  background-color: var(--color-emerald);
+  color: var(--bg-main);
+  padding: 0.875rem;
+  border-radius: var(--radius-xl);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  transition: var(--transition-fast);
+  margin-top: var(--space-sm);
+
+  &:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  }
+}

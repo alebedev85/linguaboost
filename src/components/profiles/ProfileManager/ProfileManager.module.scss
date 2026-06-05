@@ -1,0 +1,79 @@
+.container {
+  max-width: 48rem;
+  margin: var(--space-xl) auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-xl);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.profileCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition-fast);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-indigo);
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1);
+  }
+
+  &.active {
+    border-color: var(--color-emerald);
+    background-color: rgba(16, 185, 129, 0.02);
+  }
+}
+
+.profileName {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profileMeta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+.activeIndicator {
+  color: var(--color-emerald);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.createCard {
+  background-color: transparent;
+  border: 2px dashed var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+}
