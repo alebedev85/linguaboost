@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { useAuth } from '@/hooks/useAuth';
 
 // import TrainingManager from '@/components/training/TrainingManager';
@@ -12,19 +11,29 @@ import { useAuth } from '@/hooks/useAuth';
 
 // Подключение модульного SCSS
 import styles from './page.module.scss';
+import Loader from '@/components/Loader/Loader';
+import { setUser } from '@/store/slices/authSlice';
+import { useEffect } from 'react';
 
 export default function HomePage() {
+  const dispatch = useAppDispatch();
   // Отказоустойчивый хук авторизации (Firebase + Local Fallback)
-  // const { user, loading } = useAuth();
+  const { user, loading } = useAuth();
   
   // Получаем текущую активную вкладку из Redux UI-слайса
-  // const activeTab = useAppSelector((state) => state.ui.activeTab);
+  const activeTab = useAppSelector((state) => state.ui.activeTab);
 
-  if (true) {
+  useEffect(() => {
+    if (user) {
+      dispatch(setUser(user));
+    }
+  }, [user, dispatch]);
+
+  if (loading) {
     return (
       <div className={styles.loadingScreen}>
         <div className={styles.loadingContent}>
-          <div className={styles.spinner}></div>
+          <Loader />
           <p className={styles.loadingText}>Инициализация вашей персональной базы слов...</p>
         </div>
       </div>

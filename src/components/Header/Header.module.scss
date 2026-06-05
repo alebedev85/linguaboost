@@ -1,0 +1,153 @@
+// Локальные константы для адаптивности, если они не глобальные
+$breakpoint-sm: 640px;
+$breakpoint-lg: 1024px;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid var(--bg-card);
+  // Используем RGB переменную для создания оригинального эффекта bg-slate-900/80
+  background-color: rgba(var(--bg-surface-rgb), 0.8); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.container {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--space-lg); // 16px
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+  }
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md); // 12px
+}
+
+.logoIconBox {
+  // На базе токенов градиента
+  background: linear-gradient(135deg, var(--color-emerald-light), var(--color-teal));
+  padding: 10px; 
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Тень shadow-emerald-500/20 без магического хекса
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2); 
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: var(--bg-main);
+  }
+}
+
+.logoTitle {
+  margin-bottom: var(--space-xs); // 4px
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(to right, var(--color-emerald-light), var(--color-teal-light));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logoSubtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.controlsSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.nav {
+  display: flex;
+  background-color: var(--bg-main);
+  padding: var(--space-xs); // 4px
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--bg-card);
+}
+
+.navButton {
+  padding: var(--space-sm) var(--space-lg); // 8px 16px
+  border-radius: var(--radius-md); // 8px
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background-color: var(--color-emerald);
+    color: var(--bg-main);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+
+  &.profileBtn {
+    &:hover {
+      color: var(--color-indigo-light); // Избавились от жесткого #818cf8
+    }
+  }
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.userInfo {
+  display: none;
+  flex-direction: column;
+  text-align: right;
+
+  @media (min-width: $breakpoint-lg) {
+    display: flex;
+  }
+}
+
+.userId {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.userStatus {
+  font-size: 12px;
+  color: var(--color-emerald);
+  font-weight: 600;
+}
+
+.logoutButton {
+  padding: 6px var(--space-md); // 6px 12px
+  border-radius: var(--radius-md);
+  // Плавные прозрачные бордеры и фоны на системных переменных роуза
+  border: 1px solid rgba(244, 63, 94, 0.2); 
+  background-color: rgba(244, 63, 94, 0.1); 
+  color: var(--color-rose);
+  font-size: 12px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+
+  &:hover {
+    background-color: rgba(244, 63, 94, 0.2);
+  }
+}

@@ -1,21 +1,42 @@
 :root {
   // Цветовая палитра Slate-950 (Космическая тема)
   --bg-main: #020617;
+  --bg-main-rgb: 2, 6, 23;
   --bg-surface: #0f172a;
+  --bg-surface-rgb: 15, 23, 42;
   --bg-card: #1e293b;
 
-  // Акценты из ТЗ
-  --color-emerald: #10b981;  // Успех, кнопки действий
-  --color-indigo: #4f46e5;   // Профили
-  --color-rose: #f43f5e;     // Ошибки
-  --color-amber: #f59e0b;    // Предупреждения
+  // Акценты
+  --color-emerald: #10b981;
+  --color-emerald-light: #34d399;
+  --color-teal: #14b8a6;
+  --color-teal-light: #5eead4;
+  --color-indigo: #4f46e5;
+  --color-indigo-light: #818cf8;
+  --color-rose: #f43f5e;
+  --color-amber: #f59e0b;
 
   // Текст
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  // Border Radius (Исключаем магические цифры)
-  --radius-xl: 12px;         // Инпуты, маленькие карточки
-  --radius-3xl: 24px;        // Крупные блоки, модалки
+  // Отступы (Spacing) в rem
+  --space-xs: 0.25rem; // 4px
+  --space-sm: 0.5rem;  // 8px
+  --space-md: 0.75rem; // 12px
+  --space-lg: 1rem;    // 16px
+  --space-xl: 1.5rem;  // 24px
+  
+  // Максимальная ширина контейнеров
+  --layout-max-width: 72rem; // 1152px
+
+  // Border Radius в rem
+  --radius-sm: 0.25rem; // 4px
+  --radius-md: 0.5rem;  // 8px
+  --radius-xl: 0.75rem; // 12px
+  --radius-3xl: 1.5rem; // 24px
+
+  // Анимации
+  --transition-fast: all 0.2s ease;
 }

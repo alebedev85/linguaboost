@@ -1,13 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import authReducer from './slices/authSlice';
+import authReducer from './slices/authSlice';
 import dictionaryReducer from './slices/dictionarySlice';
+import uiReducer from './slices/uiSlice';
 // import trainingReducer from './slices/trainingSlice';
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux';
 
 export const store = configureStore({
   reducer: {
-    // auth: authReducer,
+    auth: authReducer,
     dictionary: dictionaryReducer,
+    ui: uiReducer,
     // training: trainingReducer,
   },
   middleware: (getDefaultMiddleware) =>
