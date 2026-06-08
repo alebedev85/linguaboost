@@ -1,0 +1,198 @@
+.wordCard {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--bg-card);
+  border-radius: var(--radius-3xl); // Используем твой 24px для скругления больших карточек
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-fast);
+
+  &:hover {
+    border-color: var(--text-muted);
+  }
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px; 
+  background-color: var(--color-emerald);
+  transition: width 0.3s ease;
+}
+
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.wordInfo {
+  .wordHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+}
+
+.englishText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.audioButton {
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+
+  &:hover:not(:disabled) {
+    color: var(--color-emerald-light);
+    background-color: var(--bg-card);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.russianText {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-top: var(--space-xs);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+}
+
+.cardImg {
+  border-radius: var(--radius-xl); // 12px для медиа
+  object-fit: cover;
+  background-color: var(--bg-main);
+  border: 1px solid var(--bg-card);
+}
+
+.contextBlock {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  background-color: rgba(var(--bg-main-rgb), 0.4); // Изящное использование RGB-переменной
+  padding: var(--space-md);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-lg);
+  border: 1px solid var(--bg-main);
+  line-height: 1.4;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: auto;
+  font-size: 0.75rem;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+
+  &.mastered {
+    background-color: var(--color-emerald);
+  }
+  &.learning {
+    background-color: var(--color-teal-light);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  &.new {
+    background-color: var(--text-muted);
+  }
+}
+
+.statusText {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.toggleButton {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-xl);
+  border: 1px solid transparent;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+
+  &.reset {
+    border-color: rgba(245, 158, 11, 0.2); // Магия на базе твоих ассентов
+    color: var(--color-amber);
+    background: transparent;
+    &:hover { background-color: rgba(245, 158, 11, 0.1); }
+  }
+
+  &.complete {
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--color-emerald-light);
+    background: transparent;
+    &:hover { background-color: rgba(16, 185, 129, 0.1); }
+  }
+}
+
+.deleteButton {
+  padding: var(--space-sm);
+  color: var(--text-muted);
+  border-radius: var(--radius-xl);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: inline-flex;
+
+  &:hover {
+    color: var(--color-rose);
+    background-color: rgba(244, 63, 94, 0.1);
+  }
+}
+
+.spinner {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--color-emerald-light);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
