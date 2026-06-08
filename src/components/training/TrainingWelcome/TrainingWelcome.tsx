@@ -1,12 +1,14 @@
-import React from 'react';
-import styles from './TrainingWelcome.module.scss';
+import styles from "./TrainingWelcome.module.scss";
 
 interface TrainingWelcomeProps {
   currentProfile: string;
   startTraining: () => void;
 }
 
-export default function TrainingWelcome({ currentProfile, startTraining }: TrainingWelcomeProps) {
+export default function TrainingWelcome({
+  currentProfile,
+  startTraining,
+}: TrainingWelcomeProps) {
   return (
     <div className={styles.welcomeCard}>
       {/* Декоративные блюр-окружения */}
@@ -14,23 +16,18 @@ export default function TrainingWelcome({ currentProfile, startTraining }: Train
       <div className={styles.blurBottomRight} />
 
       <div className={styles.contentWrapper}>
-        <div className={styles.rocketBadge}>
-          🚀
-        </div>
-        
-        <h2 className={styles.title}>
-          Интерактивная тренировка памяти
-        </h2>
-        
-        <p className={styles.profileInfo}>
-          Текущий профиль: {currentProfile}
-        </p>
-        
+        <div className={styles.rocketBadge}>🚀</div>
+
+        <h2 className={styles.title}>Интерактивная тренировка памяти</h2>
+
+        <p className={styles.profileInfo}>Текущий профиль: {currentProfile}</p>
+
         <p className={styles.description}>
-          Наша научно обоснованная методика задействует сразу 3 вида памяти:{' '}
-          <span className={styles.highlight}>Визуальную</span> (ИИ-образы),{' '}
-          <span className={styles.highlight}>Слуховую</span> (Gemini озвучка) и{' '}
-          <span className={styles.highlight}>Моторную</span> (интерактивный конструктор слов и диктант).
+          Наша научно обоснованная методика задействует сразу 3 вида памяти:{" "}
+          <span className={styles.highlight}>Визуальную</span> (ИИ-образы),{" "}
+          <span className={styles.highlight}>Слуховую</span> (Gemini озвучка) и{" "}
+          <span className={styles.highlight}>Моторную</span> (интерактивный
+          конструктор слов и диктант).
         </p>
 
         {/* Сетка четырех этапов обучения */}
@@ -78,7 +75,8 @@ export default function TrainingWelcome({ currentProfile, startTraining }: Train
             Начать тренировку (6 слов)
           </button>
           <p className={styles.hintText}>
-            Система автоматически выберет неизученные слова из вашего активного профиля.
+            Система автоматически выберет неизученные слова из вашего активного
+            профиля.
           </p>
         </div>
       </div>
