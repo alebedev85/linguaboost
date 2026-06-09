@@ -1,8 +1,9 @@
 import { IWord } from "@/core/types";
+import { useAppDispatch } from "@/store";
 import { deleteWord, toggleWordStatus } from "@/store/slices/dictionarySlice";
+import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
 import Image from "next/image";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import styles from "./WordCard.module.scss";
 
 interface WordCardProps {
@@ -10,7 +11,7 @@ interface WordCardProps {
 }
 
 export default function WordCard({ word }: WordCardProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
 
   const playWordAudio = (englishText: string, id?: string) => {
@@ -21,6 +22,32 @@ export default function WordCard({ word }: WordCardProps) {
     setTimeout(() => {
       setPlayingAudioId(null);
     }, 1000);
+  };
+
+  // Обработчик изменения статуса (Изучено / Сбросить)
+  const handleToggleStatus = () => {
+    dispatch(toggleWordStatus(word.id));
+    
+    const isNowLearned = word.status !== "learned";
+    dispatch(
+      showNotificationWithTimeout({
+        text: isNowLearned 
+          ? `Отлично! Слово "${word.english}" перенесено в изученные.` 
+          : `Статус слова "${word.english}" сброшен.`,
+        type: isNowLearned ? "success" : "info",
+      })
+    );
+  };
+
+  // Обработчик удаления карточки слова
+  const handleDeleteWord = () => {
+    dispatch(deleteWord(word.id));
+    dispatch(
+      showNotificationWithTimeout({
+        text: `Слово "${word.english}" удалено из словаря`,
+        type: "error", // Использует твой rose-600 бордер
+      })
+    );
   };
 
   return (
@@ -105,14 +132,14 @@ export default function WordCard({ word }: WordCardProps) {
         <div className={styles.actions}>
           <button
             type="button"
-            onClick={() => dispatch(toggleWordStatus(word.id))}
+            onClick={handleToggleStatus}
             className={`${styles.toggleButton} ${word.status === "learned" ? styles.reset : styles.complete}`}
           >
             {word.status === "learned" ? "Сбросить" : "Уже изучено"}
           </button>
           <button
             type="button"
-            onClick={() => dispatch(deleteWord(word.id))}
+            onClick={handleDeleteWord}
             className={styles.deleteButton}
             title="Удалить слово"
           >

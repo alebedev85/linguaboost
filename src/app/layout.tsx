@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Providers } from './providers';
-import Header from '@/components/layout/Header/Header';
-import '@/styles/globals.scss';
+import Header from "@/components/layout/Header/Header";
+import "@/styles/globals.scss";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ['latin', 'cyrillic'] });
+const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: 'LinguaBoost — Умный тренажер английского языка',
-  description: 'Эффективное запоминание английской лексики с помощью ИИ-образов и аудио-озвучки',
+  title: "LinguaBoost — Умный тренажер английского языка",
+  description:
+    "Эффективное запоминание английской лексики с помощью ИИ-образов и аудио-озвучки",
 };
 
 export default function RootLayout({

@@ -1,25 +1,26 @@
-'use client';
+"use client";
 
-import { useAppDispatch, useAppSelector } from '@/store';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from "@/hooks/useAuth";
+import { useAppDispatch, useAppSelector } from "@/store";
 
-import TrainingManager from '@/components/training/TrainingManager/TrainingManager';
-import WordForm from '@/components/dictionary/WordForm/WordForm';
-import DictionaryList from '@/components/dictionary/DictionaryList/DictionaryList';
-import ProfileManager from '@/components/profiles/ProfileManager/ProfileManager';
+import DictionaryList from "@/components/dictionary/DictionaryList/DictionaryList";
+import WordForm from "@/components/dictionary/WordForm/WordForm";
+import ProfileManager from "@/components/profiles/ProfileManager/ProfileManager";
+import TrainingManager from "@/components/training/TrainingManager/TrainingManager";
+
 // import AuthForm from '@/components/auth/AuthForm';
 
 // Подключение модульного SCSS
-import styles from './page.module.scss';
-import Loader from '@/components/ui/Loader/Loader';
-import { setUser } from '@/store/slices/authSlice';
-import { useEffect } from 'react';
+import Loader from "@/components/ui/Loader/Loader";
+import { setUser } from "@/store/slices/authSlice";
+import { useEffect } from "react";
+import styles from "./page.module.scss";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
   // Отказоустойчивый хук авторизации (Firebase + Local Fallback)
   const { user, loading } = useAuth();
-  
+
   // Получаем текущую активную вкладку из Redux UI-слайса
   const activeTab = useAppSelector((state) => state.ui.activeTab);
 
@@ -34,7 +35,9 @@ export default function HomePage() {
       <div className={styles.loadingScreen}>
         <div className={styles.loadingContent}>
           <Loader />
-          <p className={styles.loadingText}>Инициализация вашей персональной базы слов...</p>
+          <p className={styles.loadingText}>
+            Инициализация вашей персональной базы слов...
+          </p>
         </div>
       </div>
     );
@@ -48,22 +51,18 @@ export default function HomePage() {
   //Функция рендеринга контента в зависимости от таба
   const renderContent = (): React.ReactNode => {
     switch (activeTab) {
-      case 'learn':
+      case "learn":
         return <TrainingManager />;
-      case 'add':
+      case "add":
         return <WordForm />;
-      case 'dictionary':
-        return <DictionaryList  />;
-      case 'profiles':
+      case "dictionary":
+        return <DictionaryList />;
+      case "profiles":
         return <ProfileManager />;
       default:
         return <TrainingManager />;
     }
   };
 
-  return (
-    <main className={styles.mainContainer}>
-      {renderContent()}
-    </main>
-  );
+  return <main className={styles.mainContainer}>{renderContent()}</main>;
 }

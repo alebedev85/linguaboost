@@ -1,5 +1,6 @@
 "use client";
 
+import Notification from "@/components/ui/Notification/Notification";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveTab } from "@/store/slices/uiSlice";
 import styles from "./Header.module.scss";
@@ -23,6 +24,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
+        <Notification />
         {/* Логотип */}
         <div className={styles.logoSection}>
           <div className={styles.logoIconBox}>
