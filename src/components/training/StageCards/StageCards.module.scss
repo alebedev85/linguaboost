@@ -1,0 +1,187 @@
+.innerWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) 0;
+  width: 100%;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  width: 100%;
+  align-items: center;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// Зона картинки
+.imageZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagePlaceholder {
+  width: 14rem; // w-56
+  height: 14rem; // h-56
+  border-radius: var(--radius-xl);
+  background-color: var(--bg-main);
+  border: 1px dashed var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-lg);
+
+  @media (min-width: 768px) {
+    width: 16rem; // w-64
+    height: 16rem; // h-64
+  }
+}
+
+.bulbEmoji {
+  font-size: 2.25rem; // text-4xl
+  margin-bottom: var(--space-sm);
+}
+
+.placeholderText {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+// Зона текстовой информации
+.infoZone {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+
+  @media (min-width: 768px) {
+    text-align: left;
+  }
+}
+
+.wordHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+}
+
+.englishWord {
+  font-size: 2.25rem; // text-4xl
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.025em;
+}
+
+.audioBtn {
+  padding: var(--space-sm);
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--color-emerald);
+  border-radius: var(--radius-xl);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &:hover {
+    background-color: rgba(16, 185, 129, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.metaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.metaLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.russianWord {
+  font-size: 1.5rem; // text-2xl
+  font-weight: 700;
+  color: var(--color-teal-light);
+}
+
+.contextBubble {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-main);
+  padding: var(--space-lg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--bg-main);
+  font-style: italic;
+}
+
+// Блок кнопок
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+  width: 100%;
+  max-width: 28rem; // max-w-md
+  margin-top: var(--space-xl);
+}
+
+.btnDanger {
+  padding: var(--space-lg) 0;
+  background-color: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  color: var(--color-rose);
+  border-radius: var(--radius-xl);
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+
+  &:hover {
+    background-color: rgba(244, 63, 94, 0.2);
+  }
+}
+
+.btnSuccess {
+  padding: var(--space-lg) 0;
+  background-color: var(--color-emerald);
+  color: var(--bg-main);
+  border-radius: var(--radius-xl);
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15);
+  transition: var(--transition-fast);
+
+  &:hover {
+    background-color: var(--color-emerald-light);
+  }
+}
