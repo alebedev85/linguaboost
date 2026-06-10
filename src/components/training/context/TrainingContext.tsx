@@ -96,16 +96,36 @@ export function TrainingProvider({ children }: { children: React.ReactNode }) {
       // Гасим оверлей обратной связи
       setTrainingFeedback(null);
 
-      // Проверяем, остались ли еще слова внутри текущего этапа
-      if (currentWordIndex < trainingSession.words.length - 1) {
-        // Переходим к следующему слову в массиве
-        setCurrentWordIndex((prev) => prev + 1);
-      } else {
-        // Текущий круг слов завершен. Сюда позже встанет логика инкремента этапа (stage + 1)
-        alert("Этап завершен!");
-        setTrainingSession(null); // Временно сбрасываем сессию (возврат на стартовый экран)
+      // 1. Берем актуальное состояние wordStates (учитывая только что зафиксированный ответ)
+      const currentWords = trainingSession.words;
+      const stageKey = `stage${trainingSession.stage}Passed` as keyof typeof updatedWordStates[string];
+
+      // 2. Ищем индекс следующего не пройденного слова, начиная со следующей позиции
+      let nextIndex = -1;
+      const totalWords = currentWords.length;
+
+      for (let i = 1; i <= totalWords; i++) {
+        // Вычисляем индекс с цикличным сдвигом (если вышли за пределы длины — начнем с 0)
+        const checkIndex = (currentWordIndex + i) % totalWords;
+        const wordId = currentWords[checkIndex].id;
+        
+        // Если у этого слова текущий этап еще не отмечен как true — мы нашли следующую цель
+        if (!updatedWordStates[wordId][stageKey]) {
+          nextIndex = checkIndex;
+          break;
+        }
       }
-    }, 1200); // 1200ms идеально сбалансировано под CSS-анимацию оверлея
+
+      // 3. Анализируем результат поиска
+      if (nextIndex !== -1) {
+        // Если нашли слово, которое пользователь еще не угадал (или завалил) — переключаемся на него
+        setCurrentWordIndex(nextIndex);
+      } else {
+        // Если не пройденных слов больше нет (все получили true на текущем этапе) — этап успешно завершен!
+        alert(`Этап ${trainingSession.stage} успешно завершен! Все слова выучены.`);
+        setTrainingSession(null); // Переход на следующий этап или сброс
+      }
+    }, 1200);
   };
 
   // Вычисляемое свойство (производный стейт). Избавляет дочерние компоненты от ручного поиска текущего слова по индексу.
