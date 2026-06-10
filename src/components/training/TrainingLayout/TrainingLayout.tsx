@@ -1,47 +1,17 @@
 "use client";
 
 import React from "react";
+import { useTraining } from "../context/TrainingContext";
 import styles from "./TrainingLayout.module.scss";
 
-export interface IWord {
-  id: string;
-  english: string;
-  russian: string;
-  context?: string;
-}
+export default function TrainingLayout({ children }: { children: React.ReactNode }) {
+  const { trainingSession, currentWordIndex, trainingFeedback } = useTraining();
 
-export interface ITrainingSession {
-  stage: number;
-  words: IWord[];
-  wordStates: {
-    [wordId: string]: {
-      [stageKey: string]: boolean;
-    };
-  };
-}
+  if (!trainingSession) return null;
 
-export interface IFeedback {
-  type: "success" | "error";
-  msg: string;
-  correct?: string;
-}
-
-interface TrainingLayoutProps {
-  trainingSession: ITrainingSession;
-  currentWordIndex: number;
-  trainingFeedback: IFeedback | null;
-  children: React.ReactNode;
-}
-
-export default function TrainingLayout({
-  trainingSession,
-  currentWordIndex,
-  trainingFeedback,
-  children,
-}: TrainingLayoutProps) {
   return (
     <div className={styles.container}>
-      {/* Блок 1: Статус этапов тренировки */}
+      {/* Шапка: Текущий Этап */}
       <div className={styles.stageStatusCard}>
         <div className={styles.stageInfo}>
           <div className={styles.stageBadge}>Этап {trainingSession.stage} из 4</div>
@@ -69,7 +39,7 @@ export default function TrainingLayout({
         </div>
       </div>
 
-      {/* Блок 2: Прогресс слов текущего этапа */}
+      {/* Полоски прогресса слов */}
       <div className={styles.progressCard}>
         <span className={styles.progressLabel}>Прогресс текущего этапа:</span>
         <div className={styles.wordBars}>
@@ -90,7 +60,7 @@ export default function TrainingLayout({
         </span>
       </div>
 
-      {/* Блок 3: Контейнер тренировки + Оверлей обратной связи */}
+      {/* Основной бокс карточки */}
       <div className={styles.mainContentCard}>
         {trainingFeedback && (
           <div
@@ -118,7 +88,6 @@ export default function TrainingLayout({
           </div>
         )}
 
-        {/* Сюда рендерится сам компонент этапа (например, StageCards) */}
         {children}
       </div>
     </div>

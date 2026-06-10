@@ -1,4 +1,3 @@
-// @/core/store/dictionarySlice.ts
 import { IWord } from "@/core/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { dictionaryMock } from "./mocks";
