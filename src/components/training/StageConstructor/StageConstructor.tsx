@@ -111,7 +111,6 @@ export default function StageConstructor() {
           <span className={styles.label}>Соберите слово из букв:</span>
           <h3 className={styles.russianWord}>{currentWord.russian}</h3>
           {currentWord.context && (
-            // Кавычки заменены на безопасные HTML-мнемоники для прохождения строгих линтеров
             <p className={styles.contextText}>
               &laquo;{currentWord.context}&raquo;
             </p>
