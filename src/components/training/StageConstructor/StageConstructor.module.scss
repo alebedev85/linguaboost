@@ -120,40 +120,40 @@
   margin: var(--space-xl) auto 0;
 }
 
-.actionBtn {
-  flex: 1;
-  padding: var(--space-lg) 0;
-  font-size: 0.875rem;
-  font-weight: 700;
-  border-radius: var(--radius-xl);
-  transition: var(--transition-fast);
-  cursor: pointer;
-  border: none;
+// .actionBtn {
+//   flex: 1;
+//   padding: var(--space-lg) 0;
+//   font-size: 0.875rem;
+//   font-weight: 700;
+//   border-radius: var(--radius-xl);
+//   transition: var(--transition-fast);
+//   cursor: pointer;
+//   border: none;
 
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none !important;
-  }
+//   &:disabled {
+//     opacity: 0.4;
+//     cursor: not-allowed;
+//     transform: none !important;
+//   }
 
-  &.reset {
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-secondary);
+//   &.reset {
+//     background-color: rgba(255, 255, 255, 0.03);
+//     border: 1px solid rgba(255, 255, 255, 0.05);
+//     color: var(--text-secondary);
 
-    &:hover:not(:disabled) {
-      background-color: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-    }
-  }
+//     &:hover:not(:disabled) {
+//       background-color: rgba(255, 255, 255, 0.08);
+//       color: var(--text-primary);
+//     }
+//   }
 
-  &.check {
-    background-color: var(--color-emerald);
-    color: #022c22; // Темный текст для контраста на зеленом
-    font-weight: 900;
+//   &.check {
+//     background-color: var(--color-emerald);
+//     color: #022c22; // Темный текст для контраста на зеленом
+//     font-weight: 900;
 
-    &:hover:not(:disabled) {
-      background-color: var(--color-emerald-light);
-    }
-  }
-}
+//     &:hover:not(:disabled) {
+//       background-color: var(--color-emerald-light);
+//     }
+//   }
+// }

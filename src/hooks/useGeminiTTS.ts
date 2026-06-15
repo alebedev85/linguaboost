@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 // Вспомогательная функция сборки WAV-файла из сырых PCM-данных, которые присылает Gemini
 function pcmToWavUrl(base64Audio: string, sampleRate = 24000): string {
@@ -37,52 +37,59 @@ export function useGeminiTTS() {
   // Забираем ключ из .env (NEXT_PUBLIC_GEMINI_API_KEY)
   const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
-  const speak = useCallback(async (text: string) => {
-    if (!text || !apiKey || isPlaying) return;
+  const speak = (text: string) => {
+  // Браузерная озвучка (вместо вызова Gemini)
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  window.speechSynthesis.speak(utterance);
+};
 
-    try {
-      setIsPlaying(true);
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+  // const speak = useCallback(async (text: string) => {
+  //   if (!text || !apiKey || isPlaying) return;
+
+  //   try {
+  //     setIsPlaying(true);
+  //     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
       
-      const payload = {
-        contents: [{ parts: [{ text: `Say clearly in a professional British English accent: ${text}` }] }],
-        generationConfig: { 
-          responseModalities: ["AUDIO"], 
-          speechConfig: { 
-            voiceConfig: { 
-              prebuiltVoiceConfig: { voiceName: "Kore" } // Приятный дефолтный голос от Google
-            } 
-          } 
-        }
-      };
+  //     const payload = {
+  //       contents: [{ parts: [{ text: `Say clearly in a professional British English accent: ${text}` }] }],
+  //       generationConfig: { 
+  //         responseModalities: ["AUDIO"], 
+  //         speechConfig: { 
+  //           voiceConfig: { 
+  //             prebuiltVoiceConfig: { voiceName: "Kore" } // Приятный дефолтный голос от Google
+  //           } 
+  //         } 
+  //       }
+  //     };
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+  //     const response = await fetch(url, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload),
+  //     });
 
-      const result = await response.json();
-      const base64Audio = result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+  //     const result = await response.json();
+  //     const base64Audio = result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
 
-      if (base64Audio) {
-        const wavUrl = pcmToWavUrl(base64Audio, 24000);
-        const audio = new Audio(wavUrl);
+  //     if (base64Audio) {
+  //       const wavUrl = pcmToWavUrl(base64Audio, 24000);
+  //       const audio = new Audio(wavUrl);
         
-        audio.onended = () => {
-          setIsPlaying(false);
-          URL.revokeObjectURL(wavUrl);
-        };
+  //       audio.onended = () => {
+  //         setIsPlaying(false);
+  //         URL.revokeObjectURL(wavUrl);
+  //       };
 
-        await audio.play();
-      } else {
-        setIsPlaying(false);
-      }
-    } catch (err) {
-      console.error("Gemini TTS Error:", err);
-      setIsPlaying(false);
-    }
-  }, [apiKey, isPlaying]);
+  //       await audio.play();
+  //     } else {
+  //       setIsPlaying(false);
+  //     }
+  //   } catch (err) {
+  //     console.error("Gemini TTS Error:", err);
+  //     setIsPlaying(false);
+  //   }
+  // }, [apiKey, isPlaying]);
 
   return { speak, isPlaying };
 }

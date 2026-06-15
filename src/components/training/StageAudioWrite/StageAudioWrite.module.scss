@@ -1,0 +1,154 @@
+.innerWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.audioCenter {
+  text-align: center;
+  margin-bottom: var(--space-md);
+
+  .label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .hintText {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: var(--space-sm);
+  }
+}
+
+// Огромная круглая космическая кнопка проигрывания
+.pulseButtonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) 0;
+}
+
+.bigAudioBtn {
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-emerald), #0d9488);
+  color: #022c22;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-emerald-light), #14b8a6);
+    transform: scale(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+// Поле ввода и группа ответа
+.formZone {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.audioInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-sm) var(--space-lg);
+  height: 3.5rem;
+  border-radius: var(--radius-xl);
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.125rem;
+  transition: var(--transition-fast);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-emerald);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  height: 3.25rem;
+}
+
+// Нижняя плашка подсказки
+.translationTip {
+  margin-top: var(--space-lg);
+  text-align: center;
+}
+
+.tipBadge {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: inline-flex;
+  gap: var(--space-xs);
+
+  .highlight {
+    color: var(--text-secondary);
+  }
+}
+
+// Спиннер загрузки аудио
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 4px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  display: block;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
