@@ -86,6 +86,7 @@ $breakpoint-lg: 1024px;
 .navButton {
   padding: var(--space-sm) var(--space-lg); // 8px 16px
   border-radius: var(--radius-md); // 8px
+  line-height: 1rem;
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);

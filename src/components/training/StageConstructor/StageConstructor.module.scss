@@ -1,0 +1,159 @@
+.innerWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-md);
+
+  .label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-xs);
+  }
+
+  .russianWord {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-emerald-light); // Стильный яркий акцент для изучаемого слова
+    margin: 0;
+  }
+
+  .contextText {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: var(--space-xs);
+  }
+}
+
+// Верхнее табло — поле сборки
+.assemblyZone {
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.2); // Глубокий затемненный фон
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-md);
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .placeholder {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-style: italic;
+  }
+}
+
+// Нижнее табло — пул доступных букв
+.poolZone {
+  width: 100%;
+  max-width: 36rem;
+  margin: var(--space-lg) auto 0;
+}
+
+// Общий ряд для плиток букв
+.lettersRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+// Стили плитки-буквы
+.letterBtn {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 800;
+  font-size: 1.125rem;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  @media (min-width: 768px) {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Секция управляющих кнопок
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 24rem;
+  margin: var(--space-xl) auto 0;
+}
+
+.actionBtn {
+  flex: 1;
+  padding: var(--space-lg) 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-radius: var(--radius-xl);
+  transition: var(--transition-fast);
+  cursor: pointer;
+  border: none;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  &.reset {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+
+    &:hover:not(:disabled) {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+  }
+
+  &.check {
+    background-color: var(--color-emerald);
+    color: #022c22; // Темный текст для контраста на зеленом
+    font-weight: 900;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-emerald-light);
+    }
+  }
+}
