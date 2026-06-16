@@ -30,6 +30,10 @@
   --space-md: 0.75rem; // 12px
   --space-lg: 1rem;    // 16px
   --space-xl: 1.5rem;  // 24px
+
+  // Специфические отступы для крупных блоков (Empty State)
+  --space-xxl: 3rem;   // 48px
+  --space-huge: 4rem;  // 64px
   
   // Максимальная ширина контейнеров
   --layout-max-width: 72rem; // 1152px

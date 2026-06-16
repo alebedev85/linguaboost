@@ -1,5 +1,7 @@
 .container {
   width: 100%;
+  max-width: var(--layout-max-width); // Защищаем контейнер максимальной шириной
+  margin: 0 auto;
 }
 
 .headerRow {
@@ -18,7 +20,7 @@
 .title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary); // ИСПРАВЛЕНО: Вместо #ffffff используем системный токен
 }
 
 .subtitle {
@@ -26,7 +28,7 @@
   font-size: 0.875rem;
 
   strong {
-    color: var(--color-sky-light, #38bdf8);
+    color: var(--color-sky-light); // ИСПРАВЛЕНО: Теперь переменная гарантированно объявлена в :root
   }
 }
 
@@ -39,19 +41,21 @@
 
 .badge {
   padding: 0.375rem 0.75rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
 
   &.emerald {
-    background-color: rgba(16, 185, 129, 0.1);
+    // ИСПРАВЛЕНО: Используем RGB-переменную для сохранения прозрачности альфа-канала
+    background-color: rgba(var(--color-emerald-rgb), 0.1);
     color: var(--color-emerald-light);
-    border-color: rgba(16, 185, 129, 0.2);
+    border-color: rgba(var(--color-emerald-rgb), 0.2);
   }
 
   &.sky {
-    background-color: rgba(14, 165, 233, 0.1);
-    color: #38bdf8;
-    border-color: rgba(14, 165, 233, 0.2);
+    // ИСПРАВЛЕНО: Перевели на RGB-токен
+    background-color: rgba(var(--color-sky-rgb), 0.1);
+    color: var(--color-sky-light);
+    border-color: rgba(var(--color-sky-rgb), 0.2);
   }
 
   &.slate {
@@ -64,15 +68,16 @@
 // Состояние пустого словаря
 .emptyState {
   text-align: center;
-  padding: 4rem var(--space-xl);
+  padding: var(--space-huge) var(--space-xl); // ИСПРАВЛЕНО: Убрали хардкод 4rem в пользу var(--space-huge)
   background-color: var(--bg-surface);
   border: 1px solid var(--bg-card);
   border-radius: var(--radius-3xl);
 }
 
 .emptyIcon {
-  font-size: 3rem;
+  font-size: var(--space-xxl); // ИСПРАВЛЕНО: Заменили 3rem на системный шаг var(--space-xxl)
   margin-bottom: var(--space-md);
+  display: inline-block;
 }
 
 .emptyTitle {
@@ -92,7 +97,7 @@
 .addFirstButton {
   padding: 0.625rem 1.5rem;
   background-color: var(--color-emerald);
-  color: var(--bg-main);
+  color: var(--bg-main); // Контрастный темный текст на зеленом фоне
   font-weight: 700;
   border-radius: var(--radius-xl);
   border: none;

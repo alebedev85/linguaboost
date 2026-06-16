@@ -38,6 +38,13 @@ export function useGeminiTTS() {
   const [isPlaying, setIsPlaying] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
+  // // Браузерная озвучка (вместо вызова Gemini)
+  // const speak = (text: string) => {
+  //   const utterance = new SpeechSynthesisUtterance(text);
+  //   utterance.lang = "en-US";
+  //   window.speechSynthesis.speak(utterance);
+  // };
+
   const speak = useCallback(
     async (text: string) => {
       if (!text || !apiKey) return;
@@ -57,11 +64,15 @@ export function useGeminiTTS() {
         const payload = {
           contents: [
             {
-              parts: [{ text: `Say clearly in a professional British English accent: ${text}` }],
+              parts: [
+                {
+                  text: `Say clearly in a professional British English accent: ${text}`,
+                },
+              ],
             },
           ],
           generationConfig: {
-            responseModalalities: ["AUDIO"],
+            responseModalities: ["AUDIO"],
             speechConfig: {
               voiceConfig: {
                 prebuiltVoiceConfig: { voiceName: "Kore" },
@@ -81,13 +92,18 @@ export function useGeminiTTS() {
           const errorData = await response.json().catch(() => ({}));
           // Если это наш знакомый лимит запросов
           if (response.status === 429) {
-            throw new Error("Превышен лимит запросов к API. Пожалуйста, подождите минуту.");
+            throw new Error(
+              "Превышен лимит запросов к API. Пожалуйста, подождите минуту.",
+            );
           }
-          throw new Error(errorData?.error?.message || `Ошибка сервера: ${response.status}`);
+          throw new Error(
+            errorData?.error?.message || `Ошибка сервера: ${response.status}`,
+          );
         }
 
         const result = await response.json();
-        const base64Audio = result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+        const base64Audio =
+          result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
 
         // ИСПРАВЛЕНИЕ 2: Если сервер ответил 200, но структура данных пустая
         if (!base64Audio) {
@@ -107,7 +123,6 @@ export function useGeminiTTS() {
           URL.revokeObjectURL(wavUrl);
           throw playError;
         });
-
       } catch (err: any) {
         // Сюда теперь гарантированно прилетят ВСЕ ошибки: и сетевые, и 429, и пустой базовый аудио-код
         console.error("Gemini TTS Error:", err);
@@ -115,8 +130,8 @@ export function useGeminiTTS() {
         dispatch(
           showNotificationWithTimeout({
             // Выводим либо понятный текст из нашей проверки, либо дефолтную заглушку
-            text: err.message.includes("лимит") 
-              ? err.message 
+            text: err.message.includes("лимит")
+              ? err.message
               : "Не удалось сгенерировать озвучку",
             type: "error",
           }) as any,
