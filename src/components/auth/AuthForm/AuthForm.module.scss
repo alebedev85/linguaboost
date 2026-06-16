@@ -63,6 +63,7 @@
 
 .input {
   width: 100%;
+  box-sizing: border-box;
   padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-xl);
   background-color: var(--bg-main); // Самый темный #020617
@@ -79,31 +80,6 @@
 
   &::placeholder {
     color: var(--text-muted);
-  }
-}
-
-.submitBtn {
-  width: 100%;
-  // Градиент Emerald -> Teal из твоего макета
-  background: linear-gradient(90deg, var(--color-emerald) 0%, var(--color-teal) 100%);
-  color: var(--bg-main);
-  font-weight: 900;
-  padding: var(--space-md) var(--space-lg);
-  border-radius: var(--radius-xl);
-  border: none;
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: var(--transition-fast);
-  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
-
-  &:hover:not(:disabled) {
-    filter: brightness(1.1);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: none;
   }
 }
 

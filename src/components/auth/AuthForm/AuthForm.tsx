@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import ActionButton from "@/components/ui/ActionButton/ActionButton";
 import { useAuth } from "@/hooks/useAuth";
+import React, { useState } from "react";
 import styles from "./AuthForm.module.scss";
 
 interface AuthFormProps {
@@ -12,7 +13,7 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
   const { loginAsGuest, loading } = useAuth();
   // Режим формы: true — Регистрация, false — Вход
   const [isRegisterMode, setIsRegisterMode] = useState(true);
-  
+
   // Контролируемые поля ввода
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +28,7 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
 
     try {
       setIsLoading(true);
-      
+
       if (isRegisterMode) {
         console.log("Регистрация пользователя:", { email, password });
         // TODO: Здесь будет вызов метода регистрации (например, authService.register)
@@ -52,7 +53,7 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
       <h2 className={styles.title}>
         {isRegisterMode ? "Регистрация профиля" : "Авторизация"}
       </h2>
-      
+
       <p className={styles.subtitle}>
         {isRegisterMode
           ? "Сохраняйте личную базу слов и статистику в персональной сессии"
@@ -87,16 +88,18 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
             disabled={isLoading}
           />
         </div>
-
-        <button 
-          type="submit" 
-          className={styles.submitBtn}
+        <ActionButton
+          type="submit"
+          variant="primary"
+          fontSize="sm"
           disabled={isLoading || !email.trim() || !password.trim()}
         >
-          {isLoading 
-            ? "Обработка..." 
-            : isRegisterMode ? "Создать аккаунт" : "Войти в аккаунт"}
-        </button>
+          {isLoading
+            ? "Обработка..."
+            : isRegisterMode
+              ? "Создать аккаунт"
+              : "Войти в аккаунт"}
+        </ActionButton>
       </form>
 
       {/* Переключатель режимов Вход / Регистрация */}
@@ -106,7 +109,9 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
           className={styles.switchBtn}
           onClick={() => setIsRegisterMode((prev) => !prev)}
         >
-          {isRegisterMode ? "Уже есть аккаунт? Войти" : "Нет аккаунта? Зарегистрироваться"}
+          {isRegisterMode
+            ? "Уже есть аккаунт? Войти"
+            : "Нет аккаунта? Зарегистрироваться"}
         </button>
       </div>
 
@@ -116,8 +121,8 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
       </div>
 
       {/* Быстрый гостевой старт */}
-      <button 
-        type="button" 
+      <button
+        type="button"
         className={styles.guestBtn}
         onClick={loginAsGuest}
         disabled={isLoading}

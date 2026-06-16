@@ -1,5 +1,6 @@
 "use client";
 
+import ActionButton from "@/components/ui/ActionButton/ActionButton";
 import Notification from "@/components/ui/Notification/Notification";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -58,7 +59,7 @@ export default function Header() {
         </div>
 
         {/* Управление и Меню */}
-        {user && (
+        {user ? (
           <div className={styles.controlsSection}>
             <nav className={styles.nav}>
               <button
@@ -106,6 +107,14 @@ export default function Header() {
               </button>
             </div>
           </div>
+        ) : (
+          <ActionButton
+            className={styles.loginButton}
+            variant="primary"
+            fontSize="sm"
+          >
+            Войти в аккаунт
+          </ActionButton>
         )}
       </div>
     </header>

@@ -22,7 +22,8 @@
 
 // Акцентная заполненная кнопка (бывшая .check)
 .primary {
-  background-color: var(--color-emerald);
+  // background-color: var(--color-emerald);
+  background: linear-gradient(90deg, var(--color-emerald) 0%, var(--color-teal) 100%);
   color: #022c22; // Темный текст для контраста
   font-weight: 900;
 
