@@ -1,0 +1,171 @@
+.wrapper {
+  max-width: 28rem; // max-w-md (448px)
+  margin: 0 auto;
+  background-color: var(--bg-surface); // Наш темно-синий #0f172a
+  border: 1px solid var(--bg-card);    // #1e293b
+  border-radius: var(--radius-3xl);    // 24px
+  padding: var(--space-xl);            // 24px
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    padding: var(--space-xxl); // 48px
+  }
+}
+
+// Декоративный светящийся шар в углу
+.blurOrb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6rem;
+  height: 6rem;
+  background-color: rgba(16, 185, 129, 0.05); // emerald-500/5
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg); // Отступы между полями формы
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-xl);
+  background-color: var(--bg-main); // Самый темный #020617
+  border: 1px solid var(--bg-card);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+
+  &:focus {
+    outline: none;
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+  }
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  // Градиент Emerald -> Teal из твоего макета
+  background: linear-gradient(90deg, var(--color-emerald) 0%, var(--color-teal) 100%);
+  color: var(--bg-main);
+  font-weight: 900;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-xl);
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: var(--transition-fast);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.switchModeZone {
+  margin-top: var(--space-lg);
+  text-align: center;
+}
+
+.switchBtn {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: var(--color-emerald-light);
+  cursor: pointer;
+  transition: var(--transition-fast);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Разделитель "Или"
+.divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--space-lg) 0;
+
+  &::before, &::after {
+    content: "";
+    flex-grow: 1;
+    border-top: 1px solid var(--bg-card);
+  }
+}
+
+.dividerText {
+  flex-shrink: 0;
+  margin: 0 var(--space-lg);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.guestBtn {
+  width: 100%;
+  background-color: var(--bg-main);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--text-primary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+
+  &:hover {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+}

@@ -44,7 +44,7 @@ const authSlice = createSlice({
       state.loading = false;
     },
     // Очистка состояния при выходе
-    logoutSuccess: (state) => {
+    logoutUser: (state) => {
       state.user = null;
       state.isFallback = false;
       state.loading = false;
@@ -53,5 +53,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, setFallbackMode, setLoading, setError, logoutSuccess } = authSlice.actions;
+export const { setUser, setFallbackMode, setLoading, setError, logoutUser } = authSlice.actions;
 export default authSlice.reducer;

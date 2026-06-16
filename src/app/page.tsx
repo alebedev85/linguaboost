@@ -7,10 +7,7 @@ import DictionaryList from "@/components/dictionary/DictionaryList/DictionaryLis
 import WordForm from "@/components/dictionary/WordForm/WordForm";
 import ProfileManager from "@/components/profiles/ProfileManager/ProfileManager";
 import TrainingManager from "@/components/training/TrainingManager/TrainingManager";
-
-// import AuthForm from '@/components/auth/AuthForm';
-
-// Подключение модульного SCSS
+import AuthForm from "@/components/auth/AuthForm/AuthForm";
 import Loader from "@/components/ui/Loader/Loader";
 import { setUser } from "@/store/slices/authSlice";
 import { useEffect } from "react";
@@ -44,9 +41,13 @@ export default function HomePage() {
   }
 
   // Если нет сессии Firebase и не отработал локальный режим
-  // if (!user) {
-  //   return <AuthForm />;
-  // }
+  if (!user) {
+    return (
+      <div className={styles.authWrapper}>
+        <AuthForm />
+      </div>
+    );
+  }
 
   //Функция рендеринга контента в зависимости от таба
   const renderContent = (): React.ReactNode => {
