@@ -22,8 +22,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
       } else {
         store.dispatch(setUser(null));
       }
-      // Выключаем главный лоадер один раз на всё приложение
-      store.dispatch(setLoading(false));
     });
 
     return () => unsubscribe();
