@@ -1,11 +1,16 @@
+import AudioPlayButton from "@/components/ui/AudioPlayButton/AudioPlayButton";
+import Loader from "@/components/ui/Loader/Loader";
 import { IWord } from "@/core/types";
 import { useAppDispatch } from "@/store";
-import { deleteWord, toggleWordStatus } from "@/store/slices/dictionarySlice";
+import {
+  deleteWord,
+  generateAndAttachImageThunk,
+  toggleWordStatus,
+} from "@/store/slices/dictionarySlice";
 import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "./WordCard.module.scss";
-import AudioPlayButton from "@/components/ui/AudioPlayButton/AudioPlayButton";
 
 interface WordCardProps {
   word: IWord;
@@ -14,6 +19,8 @@ interface WordCardProps {
 export default function WordCard({ word }: WordCardProps) {
   const dispatch = useAppDispatch();
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  // Локальный стейт для индикации загрузки конкретной картинки
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const playWordAudio = (englishText: string, id?: string) => {
     if (!id) return;
@@ -25,18 +32,58 @@ export default function WordCard({ word }: WordCardProps) {
     }, 1000);
   };
 
+  // Обработчик генерации изображения для готового слова
+  const handleGenerateImage = async () => {
+    if (!word.id) return;
+
+    setIsGenerating(true);
+    dispatch(
+      showNotificationWithTimeout({
+        text: `Запущена генерация изображения для "${word.english}"...`,
+        type: "info",
+      }),
+    );
+
+    try {
+      // unwrap() позволяет обработать результат thunk-а прямо в блоке try/catch
+      await dispatch(
+        generateAndAttachImageThunk({
+          wordId: word.id,
+          english: word.english,
+          russian: word.russian,
+        }),
+      ).unwrap();
+
+      dispatch(
+        showNotificationWithTimeout({
+          text: `Изображение для "${word.english}" успешно создано!`,
+          type: "success",
+        }),
+      );
+    } catch (error: any) {
+      dispatch(
+        showNotificationWithTimeout({
+          text: error || "Не удалось сгенерировать изображение",
+          type: "error",
+        }),
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   // Обработчик изменения статуса (Изучено / Сбросить)
   const handleToggleStatus = () => {
     dispatch(toggleWordStatus(word.id));
-    
+
     const isNowLearned = word.status !== "learned";
     dispatch(
       showNotificationWithTimeout({
-        text: isNowLearned 
-          ? `Отлично! Слово "${word.english}" перенесено в изученные.` 
+        text: isNowLearned
+          ? `Отлично! Слово "${word.english}" перенесено в изученные.`
           : `Статус слова "${word.english}" сброшен.`,
         type: isNowLearned ? "success" : "info",
-      })
+      }),
     );
   };
 
@@ -46,8 +93,8 @@ export default function WordCard({ word }: WordCardProps) {
     dispatch(
       showNotificationWithTimeout({
         text: `Слово "${word.english}" удалено из словаря`,
-        type: "error", // Использует твой rose-600 бордер
-      })
+        type: "error",
+      }),
     );
   };
 
@@ -68,7 +115,7 @@ export default function WordCard({ word }: WordCardProps) {
           <p className={styles.russianText}>{word.russian}</p>
         </div>
 
-        {word.imageUrl && (
+        {word.imageUrl ? (
           <div className={styles.imageWrapper}>
             <Image
               src={word.imageUrl}
@@ -76,9 +123,28 @@ export default function WordCard({ word }: WordCardProps) {
               className={styles.cardImg}
               width={48}
               height={48}
-              unoptimized // Добавь, если это внешние URL без настройки next.config
+              unoptimized
             />
           </div>
+        ) : (
+          <button
+            type="button"
+            onClick={handleGenerateImage}
+            disabled={isGenerating}
+            className={`${styles.imagePlaceholder} ${isGenerating ? styles.generating : ""}`}
+            title="Сгенерировать изображение с помощью ИИ"
+          >
+            {isGenerating ? (
+              <Loader />
+            ) : (
+              <>
+                <span className={styles.bulbEmoji}>💡</span>
+                <span className={styles.placeholderText}>
+                  Сгенерировать картинку
+                </span>
+              </>
+            )}
+          </button>
         )}
       </div>
 

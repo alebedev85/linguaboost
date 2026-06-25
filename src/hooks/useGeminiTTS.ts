@@ -1,3 +1,4 @@
+import { aiService } from "@/core/services/aiService";
 import { useAppDispatch } from "@/store";
 import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
 import { useCallback, useState } from "react";
@@ -47,11 +48,12 @@ export function useGeminiTTS() {
 
   const speak = useCallback(
     async (text: string) => {
-      if (!text || !apiKey) return;
+      console.log("Gemini TTS speak called with text:", text);
+      if (!text) return;
 
-      // Защита от дребезга: проверяем актуальное значение стейта «на лету»
+      // Защита от дребезга
       let alreadyPlaying = false;
-      setIsPlaying((prev) => {
+      setIsGeneratingSignal: setIsPlaying((prev) => {
         alreadyPlaying = prev;
         return prev;
       });
@@ -59,56 +61,8 @@ export function useGeminiTTS() {
 
       try {
         setIsPlaying(true);
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
-        const payload = {
-          contents: [
-            {
-              parts: [
-                {
-                  text: `Say clearly in a professional British English accent: ${text}`,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: "Kore" },
-              },
-            },
-          },
-        };
-
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        // ИСПРАВЛЕНИЕ 1: Ловим ошибки сервера (429, 400, 500 и т.д.)
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          // Если это наш знакомый лимит запросов
-          if (response.status === 429) {
-            throw new Error(
-              "Превышен лимит запросов к API. Пожалуйста, подождите минуту.",
-            );
-          }
-          throw new Error(
-            errorData?.error?.message || `Ошибка сервера: ${response.status}`,
-          );
-        }
-
-        const result = await response.json();
-        const base64Audio =
-          result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-
-        // ИСПРАВЛЕНИЕ 2: Если сервер ответил 200, но структура данных пустая
-        if (!base64Audio) {
-          throw new Error("Не удалось получить аудиоданные от модели.");
-        }
+        const base64Audio = await aiService.getAudioTextToSpeech(text);
 
         const wavUrl = pcmToWavUrl(base64Audio, 24000);
         const audio = new Audio(wavUrl);
@@ -118,29 +72,26 @@ export function useGeminiTTS() {
           URL.revokeObjectURL(wavUrl);
         };
 
-        // Ловим возможную блокировку автоплея браузером
         await audio.play().catch((playError) => {
           URL.revokeObjectURL(wavUrl);
           throw playError;
         });
       } catch (err: any) {
-        // Сюда теперь гарантированно прилетят ВСЕ ошибки: и сетевые, и 429, и пустой базовый аудио-код
         console.error("Gemini TTS Error:", err);
 
         dispatch(
           showNotificationWithTimeout({
-            // Выводим либо понятный текст из нашей проверки, либо дефолтную заглушку
             text: err.message.includes("лимит")
               ? err.message
               : "Не удалось сгенерировать озвучку",
             type: "error",
-          }) as any,
+          }) as any
         );
 
         setIsPlaying(false);
       }
     },
-    [apiKey, dispatch], // ИСПРАВЛЕНИЕ 3: Убрали isPlaying из зависимостей. Функция теперь стабильна!
+    [dispatch] // Сюда больше не нужен apiKey, хук максимально автономен!
   );
 
   return { speak, isPlaying };

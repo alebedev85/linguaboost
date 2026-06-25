@@ -9,6 +9,11 @@ interface ApiImageResponse {
   imageBase64: string | null;
 }
 
+// Интерфейс для ответа роута озвучки
+interface ApiAudioResponse {
+  base64Audio: string;
+}
+
 export const aiService = {
   /**
    * Запрашивает автоматический перевод слова и контекст у нашего Next API (/api/translate)
@@ -66,8 +71,38 @@ export const aiService = {
         console.error("⚠️ Ошибка внутри aiService.getImageForWord:", error);
       }
       
-      // Не роняем приложение, если упала только картинка
       return null;
+    }
+  },
+
+  /**
+   * 🔥 НОВЫЙ МЕТОД: Запрашивает генерацию аудио (TTS) у нашего Next API (/api/tts)
+   * Возвращает строку base64 с аудиоданными
+   */
+  async getAudioTextToSpeech(text: string): Promise<string> {
+    try {
+      const response = await axios.post<ApiAudioResponse>("/api/tts", {
+        text: text.trim(),
+      });
+
+      console.log("🔊 Ответ от бэкенда озвучки (TTS) получен");
+
+      if (!response.data || !response.data.base64Audio) {
+        throw new Error("Бэкенд вернул пустые аудиоданные");
+      }
+
+      return response.data.base64Audio;
+    } catch (error: any) {
+      const serverErrorMessage = error.response?.data?.error;
+
+      if (serverErrorMessage) {
+        console.error(`🔴 Бэкенд озвучки вернул ошибку: ${serverErrorMessage}`);
+        error.message = serverErrorMessage;
+      } else {
+        console.error("🔴 Ошибка внутри aiService.getAudioTextToSpeech:", error);
+      }
+
+      throw error;
     }
   },
 };

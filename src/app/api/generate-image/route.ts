@@ -8,6 +8,14 @@ async function generateImage(word: string, translation: string) {
   // ⚡️ Переключаемся на бесплатную и стабильную модель Nano Banana 2
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_API_KEY}`;
 
+
+  // const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+      
+  //     const payload = {
+  //       instances: [{ prompt: prompt }],
+  //       parameters: { sampleCount: 1 }
+  //     };
+
   try {
     const response = await fetch(url, {
       method: "POST",

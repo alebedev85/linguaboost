@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { useGeminiTTS } from "@/hooks/useGeminiTTS";
+import React from "react";
 import styles from "./AudioPlayButton.module.scss";
 
 interface AudioPlayButtonProps {
@@ -41,16 +41,21 @@ export default function AudioPlayButton({
   return (
     <button
       type="button"
-      onClick={() => speak(text)}
+      onClick={() => {
+        console.log(text);
+        speak(text);
+      }}
       disabled={isPlaying}
       className={buttonClasses}
-      title={typeof children === "string" ? children : "Прослушать произношение"}
+      title={
+        typeof children === "string" ? children : "Прослушать произношение"
+      }
     >
       {/* Иконка или Спиннер */}
       {isPlaying ? (
-        <span 
-          className={styles.spinner} 
-          style={{ width: currentIconSize, height: currentIconSize }} 
+        <span
+          className={styles.spinner}
+          style={{ width: currentIconSize, height: currentIconSize }}
         />
       ) : (
         <svg
