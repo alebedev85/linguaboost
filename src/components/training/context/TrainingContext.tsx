@@ -1,10 +1,10 @@
 "use client";
 
 import { ITrainingFeedback, ITrainingSession, IWord } from "@/core/types";
-import { finishTrainingWords } from "@/store/slices/dictionarySlice";
+import { finishTrainingWordsThunk } from "@/store/slices/dictionarySlice";
 import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
 import React, { createContext, useContext, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@/store";
 
 /**
  * Расширяем локальный интерфейс сессии, чтобы хранить агрегированные ошибки.
@@ -38,7 +38,7 @@ const TrainingContext = createContext<TrainingContextType | undefined>(
 );
 
 export function TrainingProvider({ children }: { children: React.ReactNode }) {
-  const dispatch = useDispatch(); // Инициализируем хук диспатча Redux
+  const dispatch = useAppDispatch(); // Инициализируем хук диспатча Redux
 
   const [trainingSession, setTrainingSession] =
     useState<ExtendedTrainingSession | null>(null);
@@ -186,7 +186,7 @@ export function TrainingProvider({ children }: { children: React.ReactNode }) {
           });
 
           // Отправляем массив результатов в Redux Store для обновления прогресса слов
-          dispatch(finishTrainingWords(finalPayload));
+          dispatch(finishTrainingWordsThunk(finalPayload));
 
           dispatch(
             showNotificationWithTimeout({

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/core/firebase";
 import { setUser, setLoading } from "@/store/slices/authSlice";
+import { fetchWordsThunk } from "@/store/slices/dictionarySlice";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -19,6 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           email: firebaseUser.email || 'Гостевой профиль',
           isAnonymous: firebaseUser.isAnonymous,
         }));
+        store.dispatch(fetchWordsThunk());
       } else {
         store.dispatch(setUser(null));
       }

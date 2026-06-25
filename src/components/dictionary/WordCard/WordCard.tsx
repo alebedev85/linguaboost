@@ -3,9 +3,9 @@ import Loader from "@/components/ui/Loader/Loader";
 import { IWord } from "@/core/types";
 import { useAppDispatch } from "@/store";
 import {
-  deleteWord,
+  deleteWordThunk,
   generateAndAttachImageThunk,
-  toggleWordStatus,
+  toggleWordStatusThunk,
 } from "@/store/slices/dictionarySlice";
 import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
 import Image from "next/image";
@@ -18,19 +18,8 @@ interface WordCardProps {
 
 export default function WordCard({ word }: WordCardProps) {
   const dispatch = useAppDispatch();
-  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
   // Локальный стейт для индикации загрузки конкретной картинки
   const [isGenerating, setIsGenerating] = useState(false);
-
-  const playWordAudio = (englishText: string, id?: string) => {
-    if (!id) return;
-    setPlayingAudioId(id);
-
-    // Имитация интеграции синтеза речи (TTS)
-    setTimeout(() => {
-      setPlayingAudioId(null);
-    }, 1000);
-  };
 
   // Обработчик генерации изображения для готового слова
   const handleGenerateImage = async () => {
@@ -74,7 +63,7 @@ export default function WordCard({ word }: WordCardProps) {
 
   // Обработчик изменения статуса (Изучено / Сбросить)
   const handleToggleStatus = () => {
-    dispatch(toggleWordStatus(word.id));
+    dispatch(toggleWordStatusThunk(word.id));
 
     const isNowLearned = word.status !== "learned";
     dispatch(
@@ -89,7 +78,7 @@ export default function WordCard({ word }: WordCardProps) {
 
   // Обработчик удаления карточки слова
   const handleDeleteWord = () => {
-    dispatch(deleteWord(word.id));
+    dispatch(deleteWordThunk(word.id));
     dispatch(
       showNotificationWithTimeout({
         text: `Слово "${word.english}" удалено из словаря`,
