@@ -10,7 +10,8 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
-  const { loginAsGuest, loading } = useAuth();
+  const { registerWithEmail, loginWithEmail, loginAsGuest } = useAuth();
+  
   // Режим формы: true — Регистрация, false — Вход
   const [isRegisterMode, setIsRegisterMode] = useState(true);
 
@@ -30,16 +31,26 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
       setIsLoading(true);
 
       if (isRegisterMode) {
-        console.log("Регистрация пользователя:", { email, password });
-        // TODO: Здесь будет вызов метода регистрации (например, authService.register)
+        await registerWithEmail(email, password);
+        onAuthSuccess?.("register");
       } else {
-        console.log("Вход в систему:", { email, password });
-        // TODO: Здесь будет вызов метода входа (например, authService.login)
+        await loginWithEmail(email, password);
+        onAuthSuccess?.("login");
       }
-
-      onAuthSuccess?.(isRegisterMode ? "register" : "login");
     } catch (error) {
-      console.error("Auth error:", error);
+      console.error("Auth error caught in form:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    try {
+      setIsLoading(true);
+      await loginAsGuest();
+      onAuthSuccess?.("guest");
+    } catch (error) {
+      console.error("Guest auth error caught in form:", error);
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +58,6 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
 
   return (
     <div className={styles.wrapper}>
-      {/* Декоративное размытое свечение */}
       <div className={styles.blurOrb} />
 
       <h2 className={styles.title}>
@@ -88,6 +98,7 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
             disabled={isLoading}
           />
         </div>
+        
         <ActionButton
           type="submit"
           variant="primary"
@@ -102,7 +113,6 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
         </ActionButton>
       </form>
 
-      {/* Переключатель режимов Вход / Регистрация */}
       <div className={styles.switchModeZone}>
         <button
           type="button"
@@ -115,16 +125,14 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
         </button>
       </div>
 
-      {/* Декоративный разделитель "Или" */}
       <div className={styles.divider}>
         <span className={styles.dividerText}>Или</span>
       </div>
 
-      {/* Быстрый гостевой старт */}
       <button
         type="button"
         className={styles.guestBtn}
-        onClick={loginAsGuest}
+        onClick={handleGuestLogin}
         disabled={isLoading}
       >
         🚀 Войти в гостевом режиме (быстрый старт)
