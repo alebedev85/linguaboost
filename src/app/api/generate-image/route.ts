@@ -5,7 +5,7 @@ const HF_TOKEN = process.env.HF_TOKEN;
 
 async function generateImage(word: string, translation: string) {
   // Формируем чистый и строгий промпт с фокусом на типографику и смысл
-  const prompt = `A conceptual minimalist educational illustration that visually explains the meaning of the word '${word}'. The image must clearly feature the English word "${word}" written in a clean, elegant, readable modern font as part of the scene (e.g. on a stylish label, card, or integrated into the background). Clean presentation, white background, high-quality vector-like flat design, professional aesthetic.`;
+  const prompt = `A clean clear vector educational illustration of '${word}' for kids, white background, minimalist flat design style`;
   // 🔥 Обновленный актуальный URL шлюза Hugging Face Inference
   const url =
     "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
