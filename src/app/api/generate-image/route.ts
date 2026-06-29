@@ -1,19 +1,20 @@
 import { NextResponse } from "next/server";
 
 // Замени переменную в .env на HF_TOKEN (берется в настройках Hugging Face -> Access Tokens)
-const HF_TOKEN = process.env.HF_TOKEN; 
+const HF_TOKEN = process.env.HF_TOKEN;
 
 async function generateImage(word: string, translation: string) {
-  const prompt = `A clean clear vector educational illustration of '${word}' (${translation}) for kids, white background, minimalist flat design style`;
-  
+  // Формируем чистый и строгий промпт с фокусом на типографику и смысл
+  const prompt = `A conceptual minimalist educational illustration that visually explains the meaning of the word '${word}'. The image must clearly feature the English word "${word}" written in a clean, elegant, readable modern font as part of the scene (e.g. on a stylish label, card, or integrated into the background). Clean presentation, white background, high-quality vector-like flat design, professional aesthetic.`;
   // 🔥 Обновленный актуальный URL шлюза Hugging Face Inference
-  const url = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
+  const url =
+    "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
 
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${HF_TOKEN}`, // 🛠️ Убрали синтаксическую ошибку
+        Authorization: `Bearer ${HF_TOKEN}`, // 🛠️ Убрали синтаксическую ошибку
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ inputs: prompt }),
@@ -28,7 +29,7 @@ async function generateImage(word: string, translation: string) {
 
     const arrayBuffer = await response.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
-    
+
     return base64Data || null;
   } catch (error) {
     console.error("🔴 Исключение при генерации картинки на HF:", error);
@@ -41,23 +42,35 @@ export async function POST(req: Request) {
     const { word, translation } = await req.json();
 
     if (!word?.trim() || !translation?.trim()) {
-      return NextResponse.json({ error: "Не передано слово или перевод" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Не передано слово или перевод" },
+        { status: 400 },
+      );
     }
 
     if (!HF_TOKEN) {
       console.error("🔴 Ошибка: Не задан HF_TOKEN в переменных окружения");
-      return NextResponse.json({ error: "Конфигурация сервера не завершена" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Конфигурация сервера не завершена" },
+        { status: 500 },
+      );
     }
 
     const imageBase64 = await generateImage(word, translation);
 
     if (!imageBase64) {
-      return NextResponse.json({ error: "Не удалось сгенерировать изображение" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Не удалось сгенерировать изображение" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ imageBase64 });
   } catch (error: any) {
     console.error("🔴 [Image Route Error]:", error);
-    return NextResponse.json({ error: error.message || "Ошибка сервера" }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || "Ошибка сервера" },
+      { status: 500 },
+    );
   }
 }

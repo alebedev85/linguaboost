@@ -1,5 +1,5 @@
 import AudioPlayButton from "@/components/ui/AudioPlayButton/AudioPlayButton";
-import Loader from "@/components/ui/Loader/Loader";
+import { WordImage } from "@/components/ui/WordImage/WordImage";
 import { IWord } from "@/core/types";
 import { useAppDispatch } from "@/store";
 import {
@@ -8,7 +8,6 @@ import {
   toggleWordStatusThunk,
 } from "@/store/slices/dictionarySlice";
 import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
-import Image from "next/image";
 import { useState } from "react";
 import styles from "./WordCard.module.scss";
 
@@ -104,37 +103,12 @@ export default function WordCard({ word }: WordCardProps) {
           <p className={styles.russianText}>{word.russian}</p>
         </div>
 
-        {word.imageUrl ? (
-          <div className={styles.imageWrapper}>
-            <Image
-              src={word.imageUrl}
-              alt={word.english}
-              className={styles.cardImg}
-              width={48}
-              height={48}
-              unoptimized
-            />
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleGenerateImage}
-            disabled={isGenerating}
-            className={`${styles.imagePlaceholder} ${isGenerating ? styles.generating : ""}`}
-            title="Сгенерировать изображение с помощью ИИ"
-          >
-            {isGenerating ? (
-              <Loader />
-            ) : (
-              <>
-                <span className={styles.bulbEmoji}>💡</span>
-                <span className={styles.placeholderText}>
-                  Сгенерировать картинку
-                </span>
-              </>
-            )}
-          </button>
-        )}
+        <WordImage
+          imageUrl={word.imageUrl}
+          englishWord={word.english}
+          isGenerating={isGenerating}
+          onGenerate={handleGenerateImage}
+        />
       </div>
 
       {word.context && (

@@ -1,7 +1,9 @@
 .wordCard {
   background-color: var(--bg-surface);
   border: 1px solid var(--bg-card);
-  border-radius: var(--radius-3xl); // Используем твой 24px для скругления больших карточек
+  border-radius: var(
+    --radius-3xl
+  ); // Используем твой 24px для скругления больших карточек
   padding: var(--space-lg);
   display: flex;
   flex-direction: column;
@@ -52,23 +54,47 @@
   margin-top: var(--space-xs);
 }
 
-.imageWrapper {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.cardImg {
+%base-image-container {
   width: 7rem;
   height: 7rem;
-  border-radius: var(--radius-xl); // 12px для медиа
-  object-fit: cover;
+  border-radius: var(--radius-xl);
   background-color: var(--bg-main);
-  border: 1px solid var(--bg-card);
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+
+// 2. Шаблон для выравнивания содержимого кнопок (текст + иконка по центру)
+%flex-center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+// 3. Общие стили для текста внутри кнопок генерации и регенерации
+%text-shared {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: var(--space-xs);
+  padding: 0 0.5rem;
+  transition: var(--transition-fast);
+}
+
+.sparkleIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke: var(--color-amber);
+  transition: var(--transition-fast);
 }
 
 .imagePlaceholder {
-  width: 7rem;       /* Изменено с 5rem до 3rem в цвет .imageWrapper */
-  height: 7rem;      /* Изменено с 5rem до 3rem в цвет .imageWrapper */
+  width: 7rem;
+  height: 7rem;
   border-radius: var(--radius-xl);
   background-color: var(--bg-main);
   border: 1px dashed var(--bg-card);
@@ -77,7 +103,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0;        /* Убрали фиксированный padding, чтобы не сжимать контент */
+  padding: 0; /* Убрали фиксированный padding, чтобы не сжимать контент */
   cursor: pointer;
   outline: none;
   transition: var(--transition-fast);
@@ -85,7 +111,7 @@
   &:hover:not(:disabled) {
     background-color: var(--bg-card);
     border-color: var(--text-muted);
-    
+
     .bulbEmoji {
       transform: scale(1.15);
     }
@@ -127,7 +153,10 @@
   font-size: 0.75rem;
   color: var(--text-muted);
   font-style: italic;
-  background-color: rgba(var(--bg-main-rgb), 0.4); // Изящное использование RGB-переменной
+  background-color: rgba(
+    var(--bg-main-rgb),
+    0.4
+  ); // Изящное использование RGB-переменной
   padding: var(--space-md);
   border-radius: var(--radius-xl);
   margin-bottom: var(--space-lg);

@@ -1,0 +1,181 @@
+// ==========================================
+// 💡 ШАБЛОНЫ И МИКСИНЫ ДЛЯ УБОРКИ ДУБЛИРОВАНИЯ
+// ==========================================
+
+// Базовые размеры и геометрия контейнера (7rem на 7rem)
+%base-image-container {
+  width: 7rem;
+  height: 7rem;
+  border-radius: var(--radius-xl);
+  background-color: var(--bg-main);
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+
+// Выравнивание контента (иконка + текст по центру вертикально)
+%flex-center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+// Общие типографические свойства для подписей кнопок
+%text-shared {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: var(--space-xs);
+  padding: 0 0.5rem;
+  transition: var(--transition-fast);
+}
+
+// Единый контейнер для эмодзи и кастомных SVG
+%emoji-container-shared {
+  font-size: 1.4rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: var(--transition-fast);
+  }
+}
+
+// ==========================================
+// 🛠️ СТИЛИ КОМПОНЕНТА WORD IMAGE GENERATOR
+// ==========================================
+
+.imageWrapper {
+  @extend %base-image-container;
+  position: relative;
+  overflow: hidden; // Чтобы оверлей, блюр и скругления не вылетали за рамки 12px
+
+  .cardImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 1px solid var(--bg-card);
+    transition: var(--transition-fast);
+
+    // Мягкое размытие картинки при повторной генерации
+    &.generatingBlur {
+      filter: blur(4px);
+      opacity: 0.6;
+    }
+  }
+
+  // Кнопка регенерации, всплывающая при ховере поверх картинки
+  .regenerateBtn {
+    @extend %flex-center-column;
+    position: absolute;
+    inset: 0; // Идеально растягивается по границам родительского wrapper
+    border: 1px dashed var(--bg-card);
+    background-color: rgba(0, 0, 0, 0.55); // Плавное темное наложение поверх арта
+    opacity: 0; // По умолчанию скрыта
+    z-index: 2;
+    transition: var(--transition-fast);
+
+    .bulbEmoji {
+      @extend %emoji-container-shared;
+      svg { 
+        stroke: var(--color-teal); // Подсвечиваем искры янтарным ИИ-оттенком
+      }
+    }
+
+    .regenerateBtnText {
+      @extend %text-shared;
+      color: var(--color-teal);
+    }
+
+    &:hover:not(:disabled) {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    // Состояние, когда кнопка активна во время лоадинга
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 1; // Удерживаем видимость лоадера, даже если мышку увели в сторону
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  // Эффект ХОВЕРА: проявляем кнопку регенерации
+  &:hover {
+    .regenerateBtn {
+      opacity: 1;
+    }
+  }
+}
+
+// Первичный пустой плейсхолдер с лампочкой
+.imagePlaceholder {
+  @extend %base-image-container;
+  @extend %flex-center-column;
+  border: 1px dashed var(--bg-card);
+
+  .bulbEmoji {
+    @extend %emoji-container-shared;
+    svg { 
+      stroke: var(--text-muted); 
+    }
+  }
+
+  .placeholderText {
+    @extend %text-shared;
+    color: var(--text-muted);
+  }
+
+  // Ховер-эффекты для пустого плейсхолдера
+  &:hover:not(:disabled) {
+    background-color: var(--bg-card);
+    border-color: var(--text-muted);
+
+    .bulbEmoji {
+      transform: scale(1.15) rotate(5deg); // Легкий игровой наклон лампочки
+      svg { 
+        stroke: var(--text-main); 
+      }
+    }
+
+    .placeholderText {
+      color: var(--text-main);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95); // Эффект упругого нажатия (микро-интерактив)
+  }
+
+  // Замороженное состояние плейсхолдера во время первой генерации
+  &:disabled,
+  &.generating {
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.05);
+    opacity: 0.6;
+
+    .bulbEmoji {
+      animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  }
+}
+
+// Анимация пульсации для иконки во время ожидания ответа от Hugging Face
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.4; 
+  }
+}
