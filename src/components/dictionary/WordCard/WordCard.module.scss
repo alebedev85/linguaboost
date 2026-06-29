@@ -54,19 +54,18 @@
 
 .imageWrapper {
   position: relative;
-  width: 3rem;
-  height: 3rem;
   flex-shrink: 0;
 }
 
 .cardImg {
+  width: 7rem;
+  height: 7rem;
   border-radius: var(--radius-xl); // 12px для медиа
   object-fit: cover;
   background-color: var(--bg-main);
   border: 1px solid var(--bg-card);
 }
 
-/* 🎨 ОБНОВЛЕННЫЙ ПЛЕЙСХОЛДЕР-КНОПКА */
 .imagePlaceholder {
   width: 7rem;       /* Изменено с 5rem до 3rem в цвет .imageWrapper */
   height: 7rem;      /* Изменено с 5rem до 3rem в цвет .imageWrapper */
