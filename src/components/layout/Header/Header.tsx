@@ -95,7 +95,7 @@ export default function Header() {
             <div className={styles.userSection}>
               <div className={styles.userInfo}>
                 <span className={styles.userId}>
-                  ID: {user ? user.uid : "—"}
+                  ID: {user ? user.email : "—"}
                 </span>
                 <span className={styles.userStatus}>
                   {user?.isAnonymous ? "Гостевой профиль" : "Пользователь"}
