@@ -1,18 +1,17 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppSelector } from "@/store";
 
+import AuthForm from "@/components/auth/AuthForm/AuthForm";
 import DictionaryList from "@/components/dictionary/DictionaryList/DictionaryList";
 import WordForm from "@/components/dictionary/WordForm/WordForm";
 import ProfileManager from "@/components/profiles/ProfileManager/ProfileManager";
 import TrainingManager from "@/components/training/TrainingManager/TrainingManager";
-import AuthForm from "@/components/auth/AuthForm/AuthForm";
 import Loader from "@/components/ui/Loader/Loader";
 import styles from "./page.module.scss";
 
 export default function HomePage() {
-  const dispatch = useAppDispatch();
   // Отказоустойчивый хук авторизации (Firebase + Local Fallback)
   const { user, loading, error } = useAuth();
 
@@ -27,7 +26,9 @@ export default function HomePage() {
           <p className={styles.loadingText}>
             Инициализация вашей персональной базы слов...
           </p>
-          {error && <p className="text-red-500 mt-4">Ошибка Firebase: {error}</p>}
+          {error && (
+            <p className="text-red-500 mt-4">Ошибка Firebase: {error}</p>
+          )}
         </div>
       </div>
     );

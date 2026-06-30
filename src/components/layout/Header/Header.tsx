@@ -17,7 +17,7 @@ export default function Header() {
   const currentProfile = useAppSelector(
     (state) => state.dictionary.currentProfile || "Основной профиль",
   );
-  const user = useAppSelector((state) => state.auth.user);
+  const {user, loading} = useAppSelector((state) => state.auth);
 
   // Стаб-функция выхода, пока авторизация отключена
   const handleLogout = () => {
@@ -59,7 +59,7 @@ export default function Header() {
         </div>
 
         {/* Управление и Меню */}
-        {user ? (
+        {!loading ? (
           <div className={styles.controlsSection}>
             <nav className={styles.nav}>
               <button

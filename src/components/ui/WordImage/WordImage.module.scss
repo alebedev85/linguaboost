@@ -78,15 +78,21 @@
     @extend %flex-center-column;
     position: absolute;
     inset: 0; // Идеально растягивается по границам родительского wrapper
-    border: 1px dashed var(--bg-card);
-    background-color: rgba(0, 0, 0, 0.55); // Плавное темное наложение поверх арта
+    border: 1px solid var(--bg-card);
+    border-radius: var(--radius-xl);
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.55
+    ); // Плавное темное наложение поверх арта
     opacity: 0; // По умолчанию скрыта
     z-index: 2;
     transition: var(--transition-fast);
 
     .bulbEmoji {
       @extend %emoji-container-shared;
-      svg { 
+      svg {
         stroke: var(--color-teal); // Подсвечиваем искры янтарным ИИ-оттенком
       }
     }
@@ -98,6 +104,7 @@
 
     &:hover:not(:disabled) {
       background-color: rgba(0, 0, 0, 0.7);
+      border-color: var(--text-muted);
     }
 
     // Состояние, когда кнопка активна во время лоадинга
@@ -124,8 +131,8 @@
 
   .bulbEmoji {
     @extend %emoji-container-shared;
-    svg { 
-      stroke: var(--text-muted); 
+    svg {
+      stroke: var(--text-muted);
     }
   }
 
@@ -141,8 +148,8 @@
 
     .bulbEmoji {
       transform: scale(1.15) rotate(5deg); // Легкий игровой наклон лампочки
-      svg { 
-        stroke: var(--text-main); 
+      svg {
+        stroke: var(--text-main);
       }
     }
 
@@ -170,12 +177,13 @@
 
 // Анимация пульсации для иконки во время ожидания ответа от Hugging Face
 @keyframes pulse {
-  0%, 100% { 
-    transform: scale(1); 
-    opacity: 1; 
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
-  50% { 
-    transform: scale(1.1); 
-    opacity: 0.4; 
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
   }
 }

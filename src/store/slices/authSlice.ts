@@ -22,7 +22,7 @@ const authSlice = createSlice({
     // Вызывается при успешном входе (как через Firebase, так и при моках/локальном режиме)
     setUser: (state, action: PayloadAction<IUser | null>) => {
       state.user = action.payload;
-      state.loading = false;
+      // state.loading = false;
       state.error = null;
     },
     // Включается, если Firebase заблокирован (например, провайдером или сетью)
