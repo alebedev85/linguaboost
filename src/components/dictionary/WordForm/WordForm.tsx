@@ -158,6 +158,7 @@ export default function WordForm() {
               {...register("english", { required: true })}
               disabled={translatingWord || generatingImg}
               className={styles.inputField}
+              autoComplete="off"
             />
             <button
               type="button"
@@ -185,6 +186,7 @@ export default function WordForm() {
             {...register("russian", { required: true })}
             disabled={translatingWord || generatingImg}
             className={styles.inputField}
+            autoComplete="off"
           />
         </div>
 
