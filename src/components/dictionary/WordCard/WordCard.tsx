@@ -38,7 +38,7 @@ export default function WordCard({ word }: WordCardProps) {
         generateAndAttachImageThunk({
           wordId: word.id,
           english: word.english,
-          russian: word.russian,
+          visualPrompt: word.visualPrompt,
         }),
       ).unwrap();
 

@@ -13,6 +13,7 @@ export interface IWord {
   progress: number; // 0-100
   status: WordStatus;
   createdAt: string | Timestamp;
+  visualPrompt?: string;
 }
 
 // Состояние прохождения этапов конкретным словом внутри сессии

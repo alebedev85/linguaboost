@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 // Замени переменную в .env на HF_TOKEN (берется в настройках Hugging Face -> Access Tokens)
 const HF_TOKEN = process.env.HF_TOKEN;
 
-async function generateImage(word: string, translation: string) {
+async function generateImage(promptForFlux: string) {
   // Формируем чистый и строгий промпт с фокусом на типографику и смысл
-  const prompt = `A clean clear vector educational illustration of '${word}' for kids, white background, minimalist flat design style`;
+  const prompt = `A single isolated 2D vector illustration for ${promptForFlux} for kids, cute minimalist design, thick clean outlines, clean white background`;
   
   // 🔥 Обновленный актуальный URL шлюза Hugging Face Inference
   const url =
@@ -40,9 +40,9 @@ async function generateImage(word: string, translation: string) {
 
 export async function POST(req: Request) {
   try {
-    const { word, translation } = await req.json();
+    const {promptForFlux } = await req.json();
 
-    if (!word?.trim() || !translation?.trim()) {
+    if (!promptForFlux) {
       return NextResponse.json(
         { error: "Не передано слово или перевод" },
         { status: 400 },
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const imageBase64 = await generateImage(word, translation);
+    const imageBase64 = await generateImage(promptForFlux);
 
     if (!imageBase64) {
       return NextResponse.json(

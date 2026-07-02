@@ -23,6 +23,9 @@ export default function WordForm() {
   const [translatingWord, setTranslatingWord] = useState(false);
   const [generatingImg, setGeneratingImg] = useState(false);
 
+  // 🔥 Храним описание образа от Gemini локально, чтобы передать его в сабмит
+  const [aiVisualPrompt, setAiVisualPrompt] = useState<string>("");
+
   // Следим за изменениями английского поля для работы кнопки перевода
   const currentEnglishValue = useWatch({
     control,
@@ -42,18 +45,25 @@ export default function WordForm() {
     }
 
     setTranslatingWord(true);
+    setAiVisualPrompt(""); // Сбрасываем старый промпт перед новым запросом
 
     try {
-      // Чистый, понятный вызов в одну строчку
-      const data =
-        await aiService.getTranslationAndContext(currentEnglishValue);
+      // Метод теперь возвращает { translation, example, visualPrompt }
+      const data = await aiService.getTranslationAndContext(currentEnglishValue);
+
+      console.log(data)
 
       setValue("russian", data.translation);
       setValue("context", data.example);
+      
+      // 🔥 Запоминаем сгенерированный физический образ слова
+      if (data.visualPrompt) {
+        setAiVisualPrompt(data.visualPrompt);
+      }
 
       dispatch(
         showNotificationWithTimeout({
-          text: "Перевод успешно сгенерирован Gemini",
+          text: "Перевод и ИИ-образ успешно сгенерированы Gemini",
           type: "success",
         }),
       );
@@ -70,9 +80,8 @@ export default function WordForm() {
     }
   };
 
-  // Функция сабмита формы теперь выглядит так:
+  // Функция сабмита формы:
   const onSubmit = async (data: WordFormInputs) => {
-    // 1. Проверяем наличие перевода (если пользователь проигнорировал автоперевод и оставил поле пустым)
     if (!data.russian?.trim()) {
       dispatch(
         showNotificationWithTimeout({
@@ -86,21 +95,23 @@ export default function WordForm() {
     setGeneratingImg(true); // Включаем лоадер "Генерация ИИ-иллюстрации..."
 
     try {
-      // 2. Отправляем в Thunk чистые данные из полей формы
-      // Флаг needImage: true говорит танку, что нужно попробовать сгенерировать картинку
+      // 🔥 Передаем visualPrompt в Thunk. 
+      // Если пользователь ввел слово вручную без клика по роботу, поле будет пустым,
+      // и танк подставит само английское слово в качестве fallback.
       const result = await dispatch(
         saveWordThunk({
           english: data.english.trim(),
           russian: data.russian.trim(),
           context: data.context?.trim() || "",
           needImage: true,
+          visualPrompt: aiVisualPrompt || undefined, 
         }),
       ).unwrap();
 
-      // 3. Если всё прошло успешно (слово сохранилось)
-      reset(); // Очищаем форму
+      // Если всё прошло успешно — очищаем форму и локальный промпт
+      reset();
+      setAiVisualPrompt(""); 
 
-      // Проверяем, создалась ли картинка на бэкенде, чтобы выдать точное уведомление
       if (result.isImageFailed) {
         dispatch(
           showNotificationWithTimeout({
@@ -216,7 +227,7 @@ export default function WordForm() {
           </svg>
           <span>
             <strong>ИИ Иллюстрация:</strong> Наша система автоматически
-            сгенерирует визуальный образ для этого слова с помощью ИИ Imagen,
+            сгенерирует визуальный образ для этого слова с помощью FLUX.1-schnell,
             чтобы задействовать вашу визуальную память при обучении.
           </span>
         </div>
@@ -238,6 +249,7 @@ export default function WordForm() {
                   style={{ opacity: 0.25 }}
                   cx="12"
                   cy="12"
+                  node-cy="12"
                   r="10"
                   stroke="currentColor"
                   strokeWidth="4"

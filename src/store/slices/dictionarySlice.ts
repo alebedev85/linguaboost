@@ -33,6 +33,7 @@ export interface SaveWordPayload {
   russian: string;
   context: string;
   needImage?: boolean;
+  visualPrompt?: string | undefined;
 }
 
 export interface SaveWordResponse extends IWord {
@@ -42,7 +43,7 @@ export interface SaveWordResponse extends IWord {
 export interface GenerateImageForExistingWordPayload {
   wordId: string;
   english: string;
-  russian: string;
+  visualPrompt: string | undefined;
 }
 
 /**
@@ -131,10 +132,8 @@ export const saveWordThunk = createAsyncThunk<
 
       if (payload.needImage) {
         try {
-          const base64Data = await aiService.getImageForWord(
-            payload.english,
-            payload.russian,
-          );
+          const promptForFlux = payload.visualPrompt || payload.english;
+          const base64Data = await aiService.getImageForWord(promptForFlux);
 
           if (base64Data) {
             const sanitizedFileName = payload.english
@@ -160,6 +159,7 @@ export const saveWordThunk = createAsyncThunk<
         english: payload.english.trim(),
         russian: payload.russian.trim(),
         context: payload.context.trim(),
+        visualPrompt: payload.visualPrompt,
         imageUrl: firestoreImageUrl,
         progress: 0,
         status: "learning" as const,
@@ -323,9 +323,10 @@ export const generateAndAttachImageThunk = createAsyncThunk<
   { state: RootState }
 >(
   "dictionary/generateAndAttachImage",
-  async ({ wordId, english, russian }, { rejectWithValue, dispatch }) => {
+  async ({ wordId, english, visualPrompt }, { rejectWithValue, dispatch }) => {
+    console.log(visualPrompt);
     try {
-      const base64Data = await aiService.getImageForWord(english, russian);
+      const base64Data = await aiService.getImageForWord(visualPrompt? visualPrompt : english);
 
       if (!base64Data) throw new Error("ИИ вернул пустой ответ");
 
