@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "LinguaBoost — Умный тренажер английского языка",
   description:
     "Эффективное запоминание английской лексики с помощью ИИ-образов и аудио-озвучки",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
