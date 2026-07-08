@@ -1,7 +1,7 @@
 "use client";
 
 import { aiService } from "@/core/services/aiService";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { saveWordThunk } from "@/store/slices/dictionarySlice";
 import { showNotificationWithTimeout } from "@/store/slices/uiSlice";
 import { useState } from "react";
@@ -16,6 +16,10 @@ export interface WordFormInputs {
 
 export default function WordForm() {
   const dispatch = useAppDispatch();
+
+  const { user } = useAppSelector((state) => state.auth);
+  const words = useAppSelector((state) => state.dictionary.words || []);
+
   const { register, handleSubmit, reset, control, setValue } =
     useForm<WordFormInputs>();
 
@@ -49,13 +53,14 @@ export default function WordForm() {
 
     try {
       // Метод теперь возвращает { translation, example, visualPrompt }
-      const data = await aiService.getTranslationAndContext(currentEnglishValue);
+      const data =
+        await aiService.getTranslationAndContext(currentEnglishValue);
 
-      console.log(data)
+      console.log(data);
 
       setValue("russian", data.translation);
       setValue("context", data.example);
-      
+
       // 🔥 Запоминаем сгенерированный физический образ слова
       if (data.visualPrompt) {
         setAiVisualPrompt(data.visualPrompt);
@@ -82,6 +87,17 @@ export default function WordForm() {
 
   // Функция сабмита формы:
   const onSubmit = async (data: WordFormInputs) => {
+    //ПРОВЕРКА НА ЛИМИТ СЛОВ ДЛЯ ГОСТЯ / АНОНИМА
+    if (user?.isAnonymous && words.length >= 10) {
+      dispatch(
+        showNotificationWithTimeout({
+          text: "В гостевом режиме можно добавить не более 10 слов. Пожалуйста, зарегистрируйтесь!",
+          type: "warning",
+        }),
+      );
+      return;
+    }
+
     if (!data.russian?.trim()) {
       dispatch(
         showNotificationWithTimeout({
@@ -95,7 +111,7 @@ export default function WordForm() {
     setGeneratingImg(true); // Включаем лоадер "Генерация ИИ-иллюстрации..."
 
     try {
-      // 🔥 Передаем visualPrompt в Thunk. 
+      // 🔥 Передаем visualPrompt в Thunk.
       // Если пользователь ввел слово вручную без клика по роботу, поле будет пустым,
       // и танк подставит само английское слово в качестве fallback.
       const result = await dispatch(
@@ -104,13 +120,13 @@ export default function WordForm() {
           russian: data.russian.trim(),
           context: data.context?.trim() || "",
           needImage: true,
-          visualPrompt: aiVisualPrompt || undefined, 
+          visualPrompt: aiVisualPrompt || undefined,
         }),
       ).unwrap();
 
       // Если всё прошло успешно — очищаем форму и локальный промпт
       reset();
-      setAiVisualPrompt(""); 
+      setAiVisualPrompt("");
 
       if (result.isImageFailed) {
         dispatch(
@@ -227,8 +243,9 @@ export default function WordForm() {
           </svg>
           <span>
             <strong>ИИ Иллюстрация:</strong> Наша система автоматически
-            сгенерирует визуальный образ для этого слова с помощью FLUX.1-schnell,
-            чтобы задействовать вашу визуальную память при обучении.
+            сгенерирует визуальный образ для этого слова с помощью
+            FLUX.1-schnell, чтобы задействовать вашу визуальную память при
+            обучении.
           </span>
         </div>
 
