@@ -22,8 +22,6 @@ export default function Header() {
   const handleLogout = () => {
     logout(); // Сработает очистка Redux + удаление из localStorage
     dispatch(setActiveTab("learn")); // Сброс активной вкладки
-    console.log("Выход из системы...");
-
     // 2. Сбрасываем вкладку на дефолтную для следующей сессии
     dispatch(setActiveTab("learn"));
   };
@@ -79,7 +77,7 @@ export default function Header() {
                 className={`${styles.navButton} ${activeTab === "dictionary" ? styles.active : ""}`}
                 onClick={() => dispatch(setActiveTab("dictionary"))}
               >
-                Словарь ({words.length})
+                Словарь ({words.filter((word) => word.status !== "learned").length})
               </button>
 
               <button
