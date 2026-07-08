@@ -1,6 +1,6 @@
 # 🚀 LinguaBoost
 
-<img width="2319" height="1943" alt="illustration" src="https://github.com/user-attachments/assets/12a602fe-893f-47bd-997a-cb0fb5d4e903" />
+<img width="2303" height="1733" alt="illustration" src="https://github.com/user-attachments/assets/5b023935-266d-45cc-912d-8188b06482cc" />
 
 **LinguaBoost** — это современный, быстрый и умный тренажер английского языка, построенный на базе Next.js 14+ и полностью интегрированный с передовыми возможностями искусственного интеллекта от Google. Приложение помогает эффективно расширять словарный запас, автоматически генерируя контекст, озвучку и визуальные ассоциации для каждого слова.
 
