@@ -1,40 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🚀 LinguaBoost
 
-## Getting Started
+**LinguaBoost** — это современный, быстрый и умный тренажер английского языка, построенный на базе Next.js 14+ и полностью интегрированный с передовыми возможностями искусственного интеллекта от Google. Приложение помогает эффективно расширять словарный запас, автоматически генерируя контекст, озвучку и визуальные ассоциации для каждого слова.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🧠 ИИ-Интеграция (Full AI Stack)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Приложение спроектировано с акцентом на комплексное использование генеративных моделей, развернутых на защищенном бэкенде:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+* 🎨 **Иллюстрации (FLUX.1-schnell):** Генерация быстрых и качественных визуальных ассоциаций для карточек слов через Hugging Face Inference API (`black-forest-labs/FLUX.1-schnell`).
+* 🔊 **Озвучка (Gemini TTS):** Нативная генерация чистого аудиопотока (модель `gemini-2.5-flash` с аудио-модальностью) для идеального британского произношения.
+* 🍏 **Контекст и Перевод (Gemini Translate):** Автоматический перевод сущностей и подбор живых контекстных примеров использования слова в предложении.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+---
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## ✨ Ключевые возможности
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Интерактивные карточки слов:** Отслеживание прогресса освоения слова в реальном времени с помощью динамического статус-бара.
+* **Умные статусы:** Автоматическая классификация слов на *«Новые»*, *«В процессе изучения»* и *«Изученные»*.
+* **Многопрофильность:** Возможность разделения словарей по разным профилям обучения.
+* **Безопасная архитектура:** Прямые запросы к Google API полностью изолированы на уровне Next.js API Routes, исключая утечку `GEMINI_API_KEY` на клиентскую сторону.
+* **Ультра-адаптивный PWA-интерфейс:** Идеальное отображение как на десктопах, так и на смартфонах (свайп-навигация, адаптивные экшены, размытие шапки через `backdrop-filter`).
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 Стек технологий
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+* **Фронтенд:** Next.js (App Router), React, TypeScript.
+* **Стилизация:** SCSS Modules (с использованием строгой системы CSS-переменных и дизайн-токенов).
+* **Управление состоянием:** Redux Toolkit (Thunks для асинхронных операций).
+* **Сетевые запросы:** Axios (клиентский слой), нативный Fetch (серверный слой API).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📂 Архитектура проекта
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Проект следует модульной и чистой структуре каталогов Next.js:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+```text
+├── src/
+│   ├── app/                      # App Router (Страницы и API-роуты)
+│   │   ├── api/
+│   │   │   ├── tts/              # Защищенный бэкенд для Gemini TTS
+│   │   │   ├── translate/        # Роут перевода и контекста
+│   │   │   └── generate-image/   # Роут генерации картинок Imagen
+│   │   └── page.tsx
+│   ├── components/               # UI и составные компоненты (Header, WordCard, Footer)
+│   ├── core/                     # Общие типы (типизация слова IWord и др.)
+│   ├── hooks/                    # Кастомные React-хуки (useAuth, useGeminiTTS)
+│   ├── services/                 # Изолированный слой API (aiService для Axios-запросов)
+│   └── store/                    # Redux-хранилище (slices для UI, словаря и авторизации)
