@@ -1,16 +1,10 @@
-// Локальные константы для адаптивности, если они не глобальные
-$breakpoint-sm: 640px;
-$breakpoint-lg: 1024px;
+@use "@/styles/breakpoints" as *;
 
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
   border-bottom: 1px solid var(--bg-card);
-  // Используем RGB переменную для создания оригинального эффекта bg-slate-900/80
-  background-color: rgba(var(--bg-surface-rgb), 0.8); 
-  backdrop-filter: blur(12px);
+  background-color: rgba(var(--bg-surface-rgb), 0.8);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .container {
@@ -23,6 +17,10 @@ $breakpoint-lg: 1024px;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-lg);
+
+  // @include respond-to("mobile") {
+  //   gap: 0;
+  // }
 }
 
 .logoSection {
@@ -33,14 +31,18 @@ $breakpoint-lg: 1024px;
 
 .logoIconBox {
   // На базе токенов градиента
-  background: linear-gradient(135deg, var(--color-emerald-light), var(--color-teal));
-  padding: 10px; 
+  background: linear-gradient(
+    135deg,
+    var(--color-emerald-light),
+    var(--color-teal)
+  );
+  padding: 10px;
   border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   // Тень shadow-emerald-500/20 без магического хекса
-  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2); 
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
 
   svg {
     width: 24px;
@@ -53,15 +55,27 @@ $breakpoint-lg: 1024px;
   margin-bottom: var(--space-xs); // 4px
   font-size: 20px;
   font-weight: 700;
-  background: linear-gradient(to right, var(--color-emerald-light), var(--color-teal-light));
+  background: linear-gradient(
+    to right,
+    var(--color-emerald-light),
+    var(--color-teal-light)
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  // @include respond-to("tablet") {
+  //   display: none;
+  // }
 }
 
 .logoSubtitle {
   font-size: 12px;
   color: var(--text-secondary);
+
+  // @include respond-to("tablet") {
+  //   display: none;
+  // }
 }
 
 .controlsSection {
@@ -69,6 +83,21 @@ $breakpoint-lg: 1024px;
   align-items: center;
   gap: var(--space-lg);
   flex-wrap: wrap;
+  position: relative;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.navWrapper {
+  @include respond-to("tablet") {
+    position: absolute;
+    top: 0%;
+    right: 105%;
+  }
+
+  @include respond-to("mobile") {
+    right: 0%;
+  }
 }
 
 .nav {
@@ -104,22 +133,28 @@ $breakpoint-lg: 1024px;
       color: var(--color-indigo-light); // Избавились от жесткого #818cf8
     }
   }
+
+  .profileTitle {
+    // @include respond-to("mobile") {
+    //   display: none;
+    // }
+  }
 }
 
 .userSection {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+
+  @include respond-to("mobile") {
+    display: none;
+  }
 }
 
 .userInfo {
-  display: none;
+  display: flex;
   flex-direction: column;
   text-align: right;
-
-  @media (min-width: $breakpoint-lg) {
-    display: flex;
-  }
 }
 
 .userId {
@@ -138,8 +173,8 @@ $breakpoint-lg: 1024px;
   padding: 6px var(--space-md); // 6px 12px
   border-radius: var(--radius-md);
   // Плавные прозрачные бордеры и фоны на системных переменных роуза
-  border: 1px solid rgba(244, 63, 94, 0.2); 
-  background-color: rgba(244, 63, 94, 0.1); 
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  background-color: rgba(244, 63, 94, 0.1);
   color: var(--color-rose);
   font-size: 12px;
   font-weight: 600;
@@ -150,6 +185,6 @@ $breakpoint-lg: 1024px;
   }
 }
 
-.loginButton{
+.loginButton {
   max-width: 150px;
 }

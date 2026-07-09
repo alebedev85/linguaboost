@@ -1,29 +1,17 @@
-// 1. Единая карта брейкпоинтов для всего проекта
+@use "sass:map";
+
 $breakpoints: (
-  "mobile-sm": 375px,
-  "mobile-nav": 500px,
-  "tablet":    768px,
-  "laptop":    1024px,
-  "desktop":   1100px,
-  "desktop-lg": 1440px
+  "tablet": 965px,
+  "mobile": 755px,
 );
 
-// 2. Универсальный миксин для медиа-запросов (Mobile-First)
+// Универсальный миксин для медиа-запросов (Desktop-First)
 @mixin respond-to($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (min-width: map-get($breakpoints, $breakpoint)) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: map.get($breakpoints, $breakpoint)) {
       @content;
     }
   } @else {
     @warn "Упс! Неизвестный брейкпоинт: #{$breakpoint}. Проверьте карту $breakpoints.";
-  }
-}
-
-// 3. Дополнительный миксин для десктоп-ферст логики (если где-то позарез нужен max-width)
-@mixin respond-down-to($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (max-width: (map-get($breakpoints, $breakpoint) - 1px)) {
-      @content;
-    }
   }
 }

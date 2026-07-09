@@ -2,6 +2,7 @@
 
 import ActionButton from "@/components/ui/ActionButton/ActionButton";
 import Notification from "@/components/ui/Notification/Notification";
+import Navigation from "@/components/ui/Navigation/Navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveTab } from "@/store/slices/uiSlice";
@@ -11,13 +12,7 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const { logout } = useAuth();
 
-  // Получаем данные из Redux стейтов
-  const activeTab = useAppSelector((state) => state.ui.activeTab);
-  const words = useAppSelector((state) => state.dictionary.words || []);
-  const currentProfile = useAppSelector(
-    (state) => state.dictionary.currentProfile || "Основной профиль",
-  );
-  const {user, loading} = useAppSelector((state) => state.auth);
+  const { user, loading } = useAppSelector((state) => state.auth);
 
   const handleLogout = () => {
     logout(); // Сработает очистка Redux + удаление из localStorage
@@ -58,35 +53,9 @@ export default function Header() {
         {/* Управление и Меню */}
         {!loading ? (
           <div className={styles.controlsSection}>
-            <nav className={styles.nav}>
-              <button
-                className={`${styles.navButton} ${activeTab === "learn" ? styles.active : ""}`}
-                onClick={() => dispatch(setActiveTab("learn"))}
-              >
-                Изучение
-              </button>
-
-              <button
-                className={`${styles.navButton} ${activeTab === "add" ? styles.active : ""}`}
-                onClick={() => dispatch(setActiveTab("add"))}
-              >
-                + Слово
-              </button>
-
-              <button
-                className={`${styles.navButton} ${activeTab === "dictionary" ? styles.active : ""}`}
-                onClick={() => dispatch(setActiveTab("dictionary"))}
-              >
-                Словарь ({words.filter((word) => word.status !== "learned").length})
-              </button>
-
-              <button
-                className={`${styles.navButton} ${styles.profileBtn} ${activeTab === "profiles" ? styles.active : ""}`}
-                onClick={() => dispatch(setActiveTab("profiles"))}
-              >
-                👤 {currentProfile}
-              </button>
-            </nav>
+            <div className={styles.navWrapper}>
+              <Navigation />
+            </div>
 
             {/* Информация о сессии пользователя */}
             <div className={styles.userSection}>

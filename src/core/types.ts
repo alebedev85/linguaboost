@@ -46,3 +46,7 @@ export interface IUser {
   email: string | null;
   isAnonymous: boolean;
 }
+
+export type ActiveTabType = 'learn' | 'add' | 'dictionary' | 'profiles';
+
+export type NotificationType = 'success' | 'error' | 'warning' | 'info';

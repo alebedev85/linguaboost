@@ -1,9 +1,6 @@
+import { ActiveTabType, NotificationType } from '@/core/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Ограничиваем вкладки только валидными значениями из ТЗ
-export type ActiveTabType = 'learn' | 'add' | 'dictionary' | 'profiles';
-
-export type NotificationType = 'success' | 'error' | 'warning' | 'info';
 
 export interface INotification {
   id: string;

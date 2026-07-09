@@ -1,0 +1,160 @@
+@use "@/styles/breakpoints" as *;
+
+.controlsWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-xl);
+  border: 1px solid transparent;
+  transition:
+    border 0.3s ease,
+    box-shadow 0.3s ease;
+
+  /* 📱 На мобилках при открытии вешаем общую рамку/тень, если нужно */
+  @include respond-to("tablet") {
+    &.open {
+      border: 1px solid var(--bg-card);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      background-color: var(--bg-main);
+    }
+  }
+}
+
+/* 💻 БАЗОВЫЕ СТИЛИ ПАНЕЛИ (Десктоп) */
+.nav {
+  display: flex;
+  background-color: var(--bg-main);
+  padding: var(--space-xs); // 4px
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--bg-card);
+  gap: 0;
+
+  // Переходы для плавной анимации выезда
+  transition:
+    transform 0.3s ease,
+    opacity 0.2s ease;
+
+  /* 📱 СХЛОПЫВАНИЕ НА МОБИЛКЕ (Меньше планшета) */
+  @include respond-to("tablet") {
+    border: none;
+    background: none;
+    padding: 0;
+    padding-right: var(--space-xs); // Небольшой отступ перед бургером
+
+    // Прячем и смещаем вправо
+    transform: translateX(20px);
+    opacity: 0;
+    pointer-events: none;
+
+    /* Выезд справа → налево при открытии бургера */
+    .controlsWrapper.open & {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+/* 🎛️ КНОПКИ НАВИГАЦИИ (Твои оригинальные стили) */
+.navButton {
+  padding: var(--space-sm) var(--space-lg); // 8px 16px
+  border-radius: var(--radius-md); // 8px
+  line-height: 1rem;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+  text-align: center;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background-color: var(--color-emerald);
+    color: var(--bg-main);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+
+  &.profileBtn {
+    &:hover {
+      color: var(--color-indigo-light);
+    }
+  }
+
+  .profileTitle {
+    @include respond-to("mobile") {
+      display: none;
+    }
+  }
+}
+
+/* 🍔 БУРГЕР */
+.burgerButton {
+  display: none; // Скрыт на десктопе
+
+  @include respond-to("tablet") {
+    display: block;
+    width: 36px;
+    height: 36px;
+    position: relative;
+    background: none;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+
+    /* Ховер только когда меню закрыто */
+    &:hover {
+      border: 1px solid var(--bg-card);
+      background-color: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-md);
+    }
+
+    span {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      height: 2px;
+      background: var(--color-emerald);
+      transition: all 0.3s ease;
+    }
+
+    span:nth-child(1) {
+      top: 11px;
+    }
+    span:nth-child(2) {
+      top: 17px;
+    }
+    span:nth-child(3) {
+      top: 23px;
+    }
+  }
+}
+
+/* Убираем рамку/ховер у бургера, когда меню открыто */
+.controlsWrapper.open .burgerButton {
+  border: none;
+  box-shadow: none;
+  background: none;
+}
+
+/* 🔄 АНИМАЦИЯ КРЕСТИКА НА МОБИЛКЕ */
+@include respond-to("tablet") {
+  .controlsWrapper.open .burgerButton {
+    span:nth-child(1) {
+      transform: rotate(45deg);
+      top: 17px;
+    }
+
+    span:nth-child(2) {
+      opacity: 0;
+    }
+
+    span:nth-child(3) {
+      transform: rotate(-45deg);
+      top: 17px;
+    }
+  }
+}
