@@ -19,14 +19,10 @@ $breakpoint-lg: 1024px;
   margin: 0 auto;
   padding: var(--space-lg); // 16px
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-lg);
-
-  @media (min-width: $breakpoint-sm) {
-    flex-direction: row;
-  }
 }
 
 .logoSection {

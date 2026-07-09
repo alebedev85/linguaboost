@@ -1,5 +1,9 @@
 @use "./_variables.scss" as *;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;

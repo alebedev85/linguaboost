@@ -59,5 +59,5 @@ export default function HomePage() {
     }
   };
 
-  return <main className={styles.mainContainer}>{renderContent()}</main>;
+  return <main className={styles.main}>{renderContent()}</main>;
 }

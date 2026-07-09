@@ -11,10 +11,6 @@ $color-violet: #a78bfa;
   padding: var(--space-xl) var(--space-xl); // На больших экранах можно увеличить, базово p-8 -> 2rem
   text-align: center;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); // shadow-2xl
-
-  @media (min-width: 640px) {
-    padding: 2rem;
-  }
 }
 
 // Задний фон: декоративные размытые круги
