@@ -67,6 +67,10 @@
   text-align: center;
   white-space: nowrap;
 
+  @include respond-to("mobile") {
+      padding: var(--space-sm)
+    }
+
   &:hover {
     color: var(--text-primary);
   }

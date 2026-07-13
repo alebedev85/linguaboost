@@ -1,3 +1,5 @@
+@use "@/styles/breakpoints" as *;
+
 .formCard {
   max-width: 36rem; // max-w-xl
   margin-left: auto;
@@ -89,12 +91,22 @@
   border-radius: var(--radius-xl);
   font-size: 0.75rem; // text-xs
   font-weight: 700;
-  cursor: pointer;
   transition: var(--transition-fast);
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: var(--space-xs);
   flex-shrink: 0; // shrink-0
+
+  @include respond-to("mobile") {
+      gap: 0;
+    }
+
+  .translateButtonText {
+    @include respond-to("mobile") {
+      display: none;
+    }
+  }
 
   &:hover:not(:disabled) {
     background-color: rgba(16, 185, 129, 0.2);

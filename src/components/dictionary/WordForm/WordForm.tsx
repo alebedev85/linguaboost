@@ -198,7 +198,9 @@ export default function WordForm() {
               {translatingWord ? (
                 <span className={styles.spinner} />
               ) : (
-                <>🤖 ИИ Перевод</>
+                <span>
+                  🤖 <span className={styles.translateButtonText}>ИИ Перевод</span>
+                </span>
               )}
             </button>
           </div>

@@ -18,7 +18,6 @@ export default function Navigation() {
 
   const handleNavClick = (tab: ActiveTabType) => {
     dispatch(setActiveTab(tab));
-    setIsMenuOpen(false); // Закрываем при переходе
   };
 
   const activeWordsCount = words.filter(
