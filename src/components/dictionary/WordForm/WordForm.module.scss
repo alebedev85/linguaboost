@@ -51,11 +51,12 @@
 
 .inputRow {
   display: flex;
+  justify-content: space-between;
   gap: var(--space-sm);
 }
 
 .inputField {
-  // flex: 1;
+  flex: 1;
   min-width: 70%;
   padding: var(--space-md) var(--space-lg);
   border-radius: var(--radius-xl);
@@ -83,7 +84,7 @@
 }
 
 .translateButton {
-  min-width: 20%;
+  min-width: 25%;
   padding: 0 var(--space-lg);
   background-color: rgba(16, 185, 129, 0.1); // bg-emerald-500/10
   color: var(--color-emerald-light);
