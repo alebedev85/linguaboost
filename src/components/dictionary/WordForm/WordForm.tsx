@@ -14,6 +14,11 @@ export interface WordFormInputs {
   context?: string;
 }
 
+const capitalize = (str: string) => {
+  const trimmed = str.trim();
+  return trimmed ? trimmed.charAt(0).toUpperCase() + trimmed.slice(1) : "";
+};
+
 export default function WordForm() {
   const dispatch = useAppDispatch();
 
@@ -116,8 +121,8 @@ export default function WordForm() {
       // и танк подставит само английское слово в качестве fallback.
       const result = await dispatch(
         saveWordThunk({
-          english: data.english.trim(),
-          russian: data.russian.trim(),
+          english: capitalize(data.english),
+          russian: capitalize(data.russian),
           context: data.context?.trim() || "",
           needImage: true,
           visualPrompt: aiVisualPrompt || undefined,
@@ -199,7 +204,8 @@ export default function WordForm() {
                 <span className={styles.spinner} />
               ) : (
                 <span>
-                  🤖 <span className={styles.translateButtonText}>ИИ Перевод</span>
+                  🤖{" "}
+                  <span className={styles.translateButtonText}>ИИ Перевод</span>
                 </span>
               )}
             </button>

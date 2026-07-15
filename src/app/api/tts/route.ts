@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+import { EdgeTTS } from "node-edge-tts";
+import fs from "fs/promises";
+import path from "path";
+import os from "os";
 
 export async function POST(req: Request) {
   try {
@@ -10,73 +12,45 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Текст не указан" }, { status: 400 });
     }
 
-    if (!GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: "GEMINI_API_KEY не задан на сервере" },
-        { status: 500 }
-      );
-    }
-
-    // Используем актуальную модель для генерации TTS
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`;
-
-    const payload = {
-      contents: [
-        {
-          parts: [
-            {
-              text: `Say clearly in a professional British English accent: ${text}`,
-            },
-          ],
-        },
-      ],
-      generationConfig: {
-        responseModalities: ["AUDIO"],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: "Kore" },
-          },
-        },
-      },
-    };
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+    // Инициализируем TTS с нужным голосом en-GB (британский)
+    const tts = new EdgeTTS({
+      voice: "en-GB-RyanNeural", // Известный качественный британский голос
+      lang: "en-GB",
+      outputFormat: "audio-24khz-96kbitrate-mono-mp3",
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      if (response.status === 429) {
-        return NextResponse.json(
-          { error: "Превышен лимит запросов к API. Пожалуйста, подождите минуту." },
-          { status: 429 }
-        );
-      }
-      return NextResponse.json(
-        { error: errorData?.error?.message || `Ошибка сервера Google: ${response.status}` },
-        { status: response.status }
-      );
+    // Создаем путь к временному файлу в операционной системе
+    const tempDir = os.tmpdir();
+    const tempFilename = `tts-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.mp3`;
+    const tempFilePath = path.join(tempDir, tempFilename);
+
+    try {
+      // 1. Библиотека генерирует аудио и записывает его во временный файл
+      await tts.ttsPromise(text, tempFilePath);
+
+      // 2. Читаем файл в буфер памяти
+      const audioBuffer = await fs.readFile(tempFilePath);
+
+      // 3. Кодируем в Base64 для фронтенда
+      const base64Audio = audioBuffer.toString("base64");
+
+      // 4. Обязательно удаляем временный файл, чтобы не забивать диск
+      await fs.unlink(tempFilePath);
+
+      return NextResponse.json({ base64Audio });
+
+    } catch (innerError) {
+      // На случай сбоя при записи/чтении файла гарантируем попытку удаления
+      try {
+        await fs.unlink(tempFilePath);
+      } catch {}
+      throw innerError;
     }
-
-    const result = await response.json();
-    const base64Audio = result?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-
-    if (!base64Audio) {
-      return NextResponse.json(
-        { error: "Не удалось получить аудиоданные от модели." },
-        { status: 500 }
-      );
-    }
-
-    // Возвращаем base64 фронтенду
-    return NextResponse.json({ base64Audio });
 
   } catch (error: any) {
-    console.error("🔴 [TTS Route Error]:", error);
+    console.error("🔴 [Edge TTS Route Error]:", error);
     return NextResponse.json(
-      { error: error.message || "Внутренняя ошибка сервера озвучки" },
+      { error: error.message || "Ошибка генерации Edge TTS" },
       { status: 500 }
     );
   }

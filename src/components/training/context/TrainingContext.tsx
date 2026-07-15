@@ -122,7 +122,7 @@ export function TrainingProvider({ children }: { children: React.ReactNode }) {
           },
     );
 
-    // Тайм-аут для демонстрации плашки обратной связи (1.2 сек)
+    // Тайм-аут для демонстрации плашки обратной связи (2 сек)
     setTimeout(() => {
       setTrainingFeedback(null);
 
@@ -199,7 +199,7 @@ export function TrainingProvider({ children }: { children: React.ReactNode }) {
           setTrainingSession(null);
         }
       }
-    }, 1200);
+    }, 2000); // 2 секунды на демонстрацию обратной связи
   };
 
   const currentWord = trainingSession

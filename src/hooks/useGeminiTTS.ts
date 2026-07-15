@@ -37,7 +37,6 @@ function pcmToWavUrl(base64Audio: string, sampleRate = 24000): string {
 export function useGeminiTTS() {
   const dispatch = useAppDispatch();
   const [isPlaying, setIsPlaying] = useState(false);
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
   // // Браузерная озвучка (вместо вызова Gemini)
   // const speak = (text: string) => {
