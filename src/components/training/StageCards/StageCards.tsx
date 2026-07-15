@@ -34,8 +34,6 @@ function TrainingImage({ src, alt }: { src: string; alt: string }) {
 
 export default function StageCards() {
   const { currentWord, handleAnswer } = useTraining();
-  const [isImageLoading, setIsImageLoading] = useState(true);
-  console.log(isImageLoading);
 
   if (!currentWord) return null;
 
