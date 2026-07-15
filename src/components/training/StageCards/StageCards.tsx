@@ -1,12 +1,41 @@
 "use client";
 
 import AudioPlayButton from "@/components/ui/AudioPlayButton/AudioPlayButton";
+import Loader from "@/components/ui/Loader/Loader";
 import Image from "next/image";
+import { useState } from "react";
 import { useTraining } from "../context/TrainingContext";
 import styles from "./StageCards.module.scss";
 
+function TrainingImage({ src, alt }: { src: string; alt: string }) {
+  // Этот стейт будет автоматически создаваться заново (в значении true)
+  // при каждом размонтировании/монтировании компонента по ключу key
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className={styles.imageContainer}>
+      {isLoading && (
+        <div className={styles.imageSkeleton}>
+          <Loader />
+        </div>
+      )}
+      <Image
+        src={src}
+        alt={alt}
+        className={`${styles.image} ${isLoading ? styles.imageHidden : ""}`}
+        width={56}
+        height={56}
+        unoptimized
+        onLoad={() => setIsLoading(false)}
+      />
+    </div>
+  );
+}
+
 export default function StageCards() {
   const { currentWord, handleAnswer } = useTraining();
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  console.log(isImageLoading);
 
   if (!currentWord) return null;
 
@@ -15,13 +44,15 @@ export default function StageCards() {
       <div className={styles.gridContainer}>
         <div className={styles.imageZone}>
           {currentWord.imageUrl ? (
-            <Image
-              src={currentWord.imageUrl}
-              alt={currentWord.english}
-              className={styles.image}
-              width={56}
-              height={56}
-              unoptimized
+            /* 
+              🔥 Передаем key={currentWord.id} сюда.
+              При смене слова React полностью уничтожит старый TrainingImage 
+              и создаст новый, сбросив его внутренний стейт isLoading в true!
+            */
+            <TrainingImage 
+              key={currentWord.id} 
+              src={currentWord.imageUrl} 
+              alt={currentWord.english} 
             />
           ) : (
             <div className={styles.imagePlaceholder}>
