@@ -110,11 +110,11 @@ export default function StageConstructor() {
         <div className={styles.header}>
           <span className={styles.label}>Соберите слово из букв:</span>
           <h3 className={styles.russianWord}>{currentWord.russian}</h3>
-          {currentWord.context && (
+          {/* {currentWord.context && (
             <p className={styles.contextText}>
               &laquo;{currentWord.context}&raquo;
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Зона сборки (Верхний слот) */}
