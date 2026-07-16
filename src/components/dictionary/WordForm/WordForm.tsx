@@ -61,7 +61,7 @@ export default function WordForm() {
       const data =
         await aiService.getTranslationAndContext(currentEnglishValue);
 
-      console.log(data);
+      // console.log(data);
 
       setValue("russian", data.translation);
       setValue("context", data.example);

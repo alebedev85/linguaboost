@@ -80,6 +80,7 @@ export const fetchWordsThunk = createAsyncThunk<
           progress: data.progress,
           status: data.status,
           createdAt: data.createdAt,
+          visualPrompt: data.visualPrompt,
         } as IWord);
       });
 
@@ -324,7 +325,7 @@ export const generateAndAttachImageThunk = createAsyncThunk<
 >(
   "dictionary/generateAndAttachImage",
   async ({ wordId, english, visualPrompt }, { rejectWithValue, dispatch }) => {
-    console.log(visualPrompt);
+    // console.log(visualPrompt);
     try {
       const base64Data = await aiService.getImageForWord(visualPrompt? visualPrompt : english);
 

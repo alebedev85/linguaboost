@@ -42,7 +42,7 @@ export default function AudioPlayButton({
     <button
       type="button"
       onClick={() => {
-        console.log(text);
+        // console.log(text);
         speak(text);
       }}
       disabled={isPlaying}

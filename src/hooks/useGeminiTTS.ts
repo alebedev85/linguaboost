@@ -47,7 +47,7 @@ export function useGeminiTTS() {
 
   const speak = useCallback(
     async (text: string) => {
-      console.log("Gemini TTS speak called with text:", text);
+      // console.log("Gemini TTS speak called with text:", text);
       if (!text) return;
 
       // Защита от дребезга

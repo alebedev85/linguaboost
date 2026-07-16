@@ -95,7 +95,7 @@ export const aiService = {
         text: text.trim(),
       });
 
-      console.log("🔊 Ответ от бэкенда озвучки (TTS) получен");
+      // console.log("🔊 Ответ от бэкенда озвучки (TTS) получен");
 
       if (!response.data || !response.data.base64Audio) {
         throw new Error("Бэкенд вернул пустые аудиоданные");
