@@ -21,7 +21,8 @@ export const aiService = {
    */
   async getTranslationAndContext(
     word: string,
-  ): Promise<{ translation: string; example: string; visualPrompt?: string }> { // 🔥 Обновили тип возвращаемого значения
+  ): Promise<{ translation: string; example: string; visualPrompt?: string }> {
+    // 🔥 Обновили тип возвращаемого значения
     try {
       const response = await axios.post<ApiWordResponse>("/api/translate", {
         word: word.trim(),
@@ -59,13 +60,16 @@ export const aiService = {
    * Запрашивает фоновую генерацию изображения у нашего Next API (/api/generate-image)
    * Возвращает готовую Base64 строку или null в случае неудачи
    */
-  async getImageForWord(visualPrompt: string): Promise<string | null> {
+  async getImageForWord(
+    visualPrompt: string | undefined,
+    word: string,
+  ): Promise<string | null> {
     try {
       // 🔥 Изменили ключ отправки на visualPrompt, чтобы бэкенд Next.js его сразу подхватил
       const response = await axios.post<ApiImageResponse>(
-        "/api/generate-image",
+        "/api/generate-imagen",
         {
-          promptForFlux: visualPrompt.trim(),
+          promptForFlux: visualPrompt ? `${word.trim()} means ${visualPrompt.trim()}` : word.trim(),
         },
       );
 

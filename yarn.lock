@@ -647,6 +647,24 @@
     protobufjs "^7.2.5"
     yargs "^17.7.2"
 
+"@huggingface/inference@^4.13.23":
+  version "4.13.23"
+  resolved "https://registry.yarnpkg.com/@huggingface/inference/-/inference-4.13.23.tgz#b24a1549e9e4595d445398a1c6ff0d420ba20ba2"
+  integrity sha512-sUi2+AZP0Gda1zBXDl3HZo3O/qJnhUks53e7DKD4s+igo3ccbbULWvCZrU99M/nqDMSWCcZQxJCX8mH+OHNy2g==
+  dependencies:
+    "@huggingface/jinja" "^0.5.9"
+    "@huggingface/tasks" "^0.21.25"
+
+"@huggingface/jinja@^0.5.9":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@huggingface/jinja/-/jinja-0.5.9.tgz#294f741fa098c2b3173788b44ca651958bffa36d"
+  integrity sha512-uWTG+l3VJRsl7EXxYizuL3P+cCPoc3cRqbWWRcQN0FhejRfbdq0RNhCmbY/YDtnTcz9icdLYuLDjsnz4d8JMuw==
+
+"@huggingface/tasks@^0.21.25":
+  version "0.21.26"
+  resolved "https://registry.yarnpkg.com/@huggingface/tasks/-/tasks-0.21.26.tgz#8ebf1db549d49aa6c28a533484312695fd8676ff"
+  integrity sha512-6QGX2qBFEf3zU+qRz+kSTI8weoUpLtNINnl8i7NUC+VB1UBxKvgPrXGCLEEkUwcRGqC0DBpJBwB0OPFg1Aa25g==
+
 "@humanfs/core@^0.19.2":
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/@humanfs/core/-/core-0.19.2.tgz#a8272ca03b2acf492670222b2320b6c421bfde60"

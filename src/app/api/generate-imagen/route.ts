@@ -2,11 +2,14 @@ import { NextResponse } from "next/server";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-async function generateImage(word: string, translation: string) {
-  const prompt = `A clean clear vector educational illustration of '${word}' (${translation}) for kids, white background, minimalist style`;
+async function generateImage(promptForFlux: string) {
+  // const prompt = `A clean clear vector educational illustration of '${word}' (${translation}) for kids, white background, minimalist style`;
+    // Формируем чистый и строгий промпт с фокусом на типографику и смысл
+  const prompt = `A single isolated 2D vector illustration for this example "${promptForFlux}" for kids, cute minimalist design, thick clean outlines, clean white background`;
+  
   
   // ⚡️ Переключаемся на бесплатную и стабильную модель Nano Banana 2
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${GEMINI_API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 
   // const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
@@ -46,13 +49,13 @@ async function generateImage(word: string, translation: string) {
 
 export async function POST(req: Request) {
   try {
-    const { word, translation } = await req.json();
+    const {promptForFlux } = await req.json();
 
-    if (!word?.trim() || !translation?.trim()) {
+    if (!promptForFlux) {
       return NextResponse.json({ error: "Не передано слово или перевод" }, { status: 400 });
     }
 
-    const imageBase64 = await generateImage(word, translation);
+    const imageBase64 = await generateImage(promptForFlux);
 
     return NextResponse.json({ imageBase64 });
   } catch (error: any) {

@@ -1,46 +1,46 @@
+import { InferenceClient } from "@huggingface/inference";
 import { NextResponse } from "next/server";
 
 // Замени переменную в .env на HF_TOKEN (берется в настройках Hugging Face -> Access Tokens)
 const HF_TOKEN = process.env.HF_TOKEN;
 
+// Инициализируем клиент Hugging Face один раз (только если токен есть)
+const client = HF_TOKEN ? new InferenceClient(HF_TOKEN) : null;
+
 async function generateImage(promptForFlux: string) {
+  if (!client) {
+    console.error("🔴 Ошибка: Клиент Hugging Face не инициализирован");
+    return null;
+  }
+
   // Формируем чистый и строгий промпт с фокусом на типографику и смысл
   const prompt = `A single isolated 2D vector illustration for this example "${promptForFlux}" for kids, cute minimalist design, thick clean outlines, clean white background`;
-  
-  // 🔥 Обновленный актуальный URL шлюза Hugging Face Inference
-  const url =
-    "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell";
 
   try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${HF_TOKEN}`, // 🛠️ Убрали синтаксическую ошибку
-        "Content-Type": "application/json",
+    // 🔥 Используем SDK вместо сырого fetch. Он сам знает правильные эндпоинты.
+    const imageBlob = (await client.textToImage({
+      provider: "nscale",
+      model: "black-forest-labs/FLUX.1-schnell",
+      inputs: prompt,
+      parameters: {
+        num_inference_steps: 4,
       },
-      body: JSON.stringify({ inputs: prompt }),
-    });
+    })) as unknown as Blob;
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("🔴 Ошибка Hugging Face API. Статус:", response.status);
-      console.error("🔴 Детали:", errText);
-      return null;
-    }
-
-    const arrayBuffer = await response.arrayBuffer();
+    // Переводим Blob в Buffer для кодирования в base64
+    const arrayBuffer = await imageBlob.arrayBuffer();
     const base64Data = Buffer.from(arrayBuffer).toString("base64");
 
     return base64Data || null;
-  } catch (error) {
-    console.error("🔴 Исключение при генерации картинки на HF:", error);
+  } catch (error: any) {
+    console.error("🔴 Исключение при генерации картинки через SDK HF:", error);
     return null;
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const {promptForFlux } = await req.json();
+    const { promptForFlux } = await req.json();
 
     if (!promptForFlux) {
       return NextResponse.json(
@@ -66,6 +66,8 @@ export async function POST(req: Request) {
       );
     }
 
+    // Возвращаем строку base64.
+    // На фронтенде во фронтенд-методе ты сможешь вставить её как `src={`data:image/webp;base64,${imageBase64}`}`
     return NextResponse.json({ imageBase64 });
   } catch (error: any) {
     console.error("🔴 [Image Route Error]:", error);

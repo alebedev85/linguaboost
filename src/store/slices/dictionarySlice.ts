@@ -133,8 +133,7 @@ export const saveWordThunk = createAsyncThunk<
 
       if (payload.needImage) {
         try {
-          const promptForFlux = payload.visualPrompt || payload.english;
-          const base64Data = await aiService.getImageForWord(promptForFlux);
+          const base64Data = await aiService.getImageForWord(payload.visualPrompt, payload.english);
 
           if (base64Data) {
             const sanitizedFileName = payload.english
@@ -327,7 +326,7 @@ export const generateAndAttachImageThunk = createAsyncThunk<
   async ({ wordId, english, visualPrompt }, { rejectWithValue, dispatch }) => {
     // console.log(visualPrompt);
     try {
-      const base64Data = await aiService.getImageForWord(visualPrompt? visualPrompt : english);
+      const base64Data = await aiService.getImageForWord(visualPrompt, english);
 
       if (!base64Data) throw new Error("ИИ вернул пустой ответ");
 
