@@ -19,6 +19,8 @@ async function generateImage(promptForFlux: string) {
   //       parameters: { sampleCount: 1 }
   //     };
 
+  console.log("Imagen")
+
   try {
     const response = await fetch(url, {
       method: "POST",
