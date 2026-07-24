@@ -8,7 +8,7 @@ async function translateAndDescribeWord(word: string) {
   // Provide a JSON object with strictly these three keys:
   // 1. "translation": The most popular Russian translation (1-3 words, no explanations).
   // 2. "example": A short, natural, simple context sentence using this word in English.
-  // 3. "visualPrompt": Give me simpl explonation the meaning of this word (especially if it is abstract). Avoid abstract ideas, describe a clear scene with shapes or items. Do not include words like "sticker" or "vector", just describe the object itself in 3-7 words.
+  // 3. "visualPrompt": Give me simpl explanation the meaning of this word (especially if it is abstract). Avoid abstract ideas, describe a clear scene with shapes or items. Do not include words like "sticker" or "vector", just describe the object itself in 3-7 words.
 
   // Example output for abstract word "friction":
   // {"translation": "Трение", "example": "Friction creates heat.", "visualPrompt": "two hands rubbing together with small sparks"}
@@ -20,7 +20,7 @@ async function translateAndDescribeWord(word: string) {
   Provide a JSON object with strictly these three keys:
   1. "translation": The most popular Russian translation (1-3 words, no explanations).
   2. "example": A short, natural, simple context sentence using this word in English.
-  3. "visualPrompt": Give me simpl explonation the meaning of this word (especially if it is abstract). Avoid abstract ideas, describe a clear scene with shapes or items.`;
+  3. "visualPrompt": Give me simpl explanation the meaning of this word (especially if it is abstract). Avoid abstract ideas, describe a clear scene with shapes or items.`;
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 

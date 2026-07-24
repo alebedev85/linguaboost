@@ -69,7 +69,8 @@ export const aiService = {
       const response = await axios.post<ApiImageResponse>(
         "/api/generate-polinations",
         {
-          promptForFlux: visualPrompt ? `the ${word.trim()} is ${visualPrompt.trim()}` : word.trim(),
+          // promptForFlux: visualPrompt ? `the ${word.trim()} is ${visualPrompt.trim()}` : word.trim(),
+          promptForFlux:  visualPrompt?.trim() || word.trim(),
         },
       );
 
