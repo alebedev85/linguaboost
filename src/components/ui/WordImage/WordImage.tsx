@@ -6,6 +6,7 @@ import styles from "./WordImage.module.scss";
 interface WordImageProps {
   imageUrl?: string | null;
   englishWord: string;
+  visualPrompt?: string;
   isGenerating: boolean;
   onGenerate: () => void;
 }
@@ -13,6 +14,7 @@ interface WordImageProps {
 export const WordImage: React.FC<WordImageProps> = ({
   imageUrl,
   englishWord,
+  visualPrompt,
   isGenerating,
   onGenerate,
 }) => {
@@ -34,7 +36,7 @@ export const WordImage: React.FC<WordImageProps> = ({
           onClick={onGenerate}
           disabled={isGenerating}
           className={styles.regenerateBtn}
-          title="Перегенерировать изображение с помощью ИИ"
+          title={visualPrompt || "Перегенерировать изображение с помощью ИИ"}
         >
           {isGenerating ? (
             <Loader />

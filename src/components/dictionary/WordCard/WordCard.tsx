@@ -106,6 +106,7 @@ export default function WordCard({ word }: WordCardProps) {
         <WordImage
           imageUrl={word.imageUrl}
           englishWord={word.english}
+          visualPrompt={word.visualPrompt}
           isGenerating={isGenerating}
           onGenerate={handleGenerateImage}
         />
