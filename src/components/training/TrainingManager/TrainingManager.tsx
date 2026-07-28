@@ -10,24 +10,37 @@ import StageSelect from "../StageSelect/StageSelect";
 import StageConstructor from "../StageConstructor/StageConstructor";
 import StageAudioWrite from "../StageAudioWrite/StageAudioWrite";
 
+// Вспомогательная функция для случайного перемешивания массива (Fisher-Yates Shuffle)
+function getRandomElements<T>(array: T[], count: number): T[] {
+  // Делаем копию массива, чтобы не мутировать исходный массив из Redux
+  const shuffled = [...array];
+  
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, count);
+}
+
 function TrainingContent() {
   const { trainingSession, startTraining } = useTraining();
   
   const allWords = useAppSelector((state) => state.dictionary.words);
 
   const handleStart = () => {
-    // Фильтруем слова согласно ТЗ: новые или в процессе изучения
+    // 1. Фильтруем слова (новые или в процессе изучения)
     const wordsToTrain = allWords.filter(
       (word) => word.status === "new" || word.status === "learning"
     );
 
-    // Ограничиваем сессию до 6 слов из ТЗ
-    const sessionWords = wordsToTrain.slice(0, 6);
-
-    if (sessionWords.length === 0) {
+    if (wordsToTrain.length === 0) {
       alert("У вас нет новых слов или слов на изучении для запуска тренировки!");
       return;
     }
+
+    // 2. Берем до 6 случайных слов в случайном порядке
+    const sessionWords = getRandomElements(wordsToTrain, 6);
 
     startTraining(sessionWords);
   };
