@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/store";
 
@@ -12,11 +13,12 @@ import Loader from "@/components/ui/Loader/Loader";
 import styles from "./page.module.scss";
 
 export default function HomePage() {
-  // Отказоустойчивый хук авторизации (Firebase + Local Fallback)
   const { user, loading, error } = useAuth();
-
-  // Получаем текущую активную вкладку из Redux UI-слайса
   const activeTab = useAppSelector((state) => state.ui.activeTab);
+
+  // Считываем параметры из URL
+  const searchParams = useSearchParams();
+  const isRegisterRequested = searchParams.get("mode") === "register";
 
   if (loading) {
     return (
@@ -34,16 +36,15 @@ export default function HomePage() {
     );
   }
 
-  // Если нет сессии Firebase и не отработал локальный режим
+  // Если не авторизован — показываем AuthForm с нужным режимом
   if (!user) {
     return (
       <div className={styles.authWrapper}>
-        <AuthForm />
+        <AuthForm initialRegisterMode={isRegisterRequested} />
       </div>
     );
   }
 
-  //Функция рендеринга контента в зависимости от таба
   const renderContent = (): React.ReactNode => {
     switch (activeTab) {
       case "learn":

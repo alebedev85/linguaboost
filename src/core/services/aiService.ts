@@ -67,7 +67,7 @@ export const aiService = {
     try {
       // 🔥 Изменили ключ отправки на visualPrompt, чтобы бэкенд Next.js его сразу подхватил
       const response = await axios.post<ApiImageResponse>(
-        "/api/generate-polinations",
+        "/api/generate-image",
         {
           // promptForFlux: visualPrompt ? `the ${word.trim()} is ${visualPrompt.trim()}` : word.trim(),
           promptForFlux:  visualPrompt?.trim() || word.trim(),

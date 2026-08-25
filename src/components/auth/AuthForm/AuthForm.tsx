@@ -6,23 +6,24 @@ import React, { useState } from "react";
 import styles from "./AuthForm.module.scss";
 
 interface AuthFormProps {
+  initialRegisterMode?: boolean; // Принимаем начальный режим из URL
   onAuthSuccess?: (mode: "login" | "register" | "guest") => void;
 }
 
-export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
+export default function AuthForm({
+  initialRegisterMode = false, // По умолчанию — Авторизация (не регистрация!)
+  onAuthSuccess,
+}: AuthFormProps) {
   const { registerWithEmail, loginWithEmail, loginAsGuest } = useAuth();
-  
-  // Режим формы: true — Регистрация, false — Вход
-  const [isRegisterMode, setIsRegisterMode] = useState(true);
+
+  // Устанавливаем режим на основе пропса
+  const [isRegisterMode] = useState(initialRegisterMode);
 
   // Контролируемые поля ввода
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  /**
-   * Отправка формы (Регистрация или Вход)
-   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim() || isLoading) return;
@@ -66,7 +67,7 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
 
       <p className={styles.subtitle}>
         {isRegisterMode
-          ? "Сохраняйте личную базу слов и статистику в персональной сессии"
+          ? "Создайте персональный аккаунт по приглашению"
           : "Войдите, чтобы продолжить обучение и синхронизировать прогресс"}
       </p>
 
@@ -98,7 +99,7 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
             disabled={isLoading}
           />
         </div>
-        
+
         <ActionButton
           type="submit"
           variant="primary"
@@ -113,17 +114,8 @@ export default function AuthForm({ onAuthSuccess }: AuthFormProps) {
         </ActionButton>
       </form>
 
-      <div className={styles.switchModeZone}>
-        <button
-          type="button"
-          className={styles.switchBtn}
-          onClick={() => setIsRegisterMode((prev) => !prev)}
-        >
-          {isRegisterMode
-            ? "Уже есть аккаунт? Войти"
-            : "Нет аккаунта? Зарегистрироваться"}
-        </button>
-      </div>
+      {/* Убрали кнопку переключения режимов. 
+          Теперь обычный пользователь не может самостоятельно включить регистрацию */}
 
       <div className={styles.divider}>
         <span className={styles.dividerText}>Или</span>
