@@ -8,6 +8,12 @@ interface AuthState {
   error: string | null;
 }
 
+const rawAdminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || '';
+const ADMIN_EMAILS = rawAdminEmails
+  .split(',')
+  .map((email) => email.trim().toLowerCase())
+  .filter(Boolean); // Удаляем пустые строки, если в конце стояла запятая
+
 const initialState: AuthState = {
   user: null,
   loading: true, // Начинаем со статуса загрузки, пока проверяется сессия
@@ -21,8 +27,21 @@ const authSlice = createSlice({
   reducers: {
     // Вызывается при успешном входе (как через Firebase, так и при моках/локальном режиме)
     setUser: (state, action: PayloadAction<IUser | null>) => {
-      state.user = action.payload;
-      // state.loading = false;
+      const userData = action.payload;
+
+      if (userData) {
+        // Вычисляем статус админа при установке юзера
+        const isAdmin = Boolean(
+          userData.email && ADMIN_EMAILS.includes(userData.email.toLowerCase())
+        );
+        state.user = {
+          ...userData,
+          isAdmin,
+        };
+      } else {
+        state.user = null;
+      }
+
       state.error = null;
     },
     // Включается, если Firebase заблокирован (например, провайдером или сетью)

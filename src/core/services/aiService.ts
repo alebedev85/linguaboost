@@ -1,3 +1,4 @@
+import { store } from "@/store";
 import axios from "axios";
 
 interface ApiWordResponse {
@@ -64,13 +65,17 @@ export const aiService = {
     visualPrompt: string | undefined,
     word: string,
   ): Promise<string | null> {
+    const state = store.getState();
+    const user = state.auth.user;
+    const userEmail = user?.isAdmin ? user.email : null;
     try {
       // 🔥 Изменили ключ отправки на visualPrompt, чтобы бэкенд Next.js его сразу подхватил
       const response = await axios.post<ApiImageResponse>(
         "/api/generate-image",
         {
           // promptForFlux: visualPrompt ? `the ${word.trim()} is ${visualPrompt.trim()}` : word.trim(),
-          promptForFlux:  visualPrompt?.trim() || word.trim(),
+          promptForFlux: visualPrompt?.trim() || word.trim(),
+          userEmail: userEmail,
         },
       );
 

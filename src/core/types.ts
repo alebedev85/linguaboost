@@ -45,6 +45,7 @@ export interface IUser {
   uid: string;
   email: string | null;
   isAnonymous: boolean;
+  isAdmin?: boolean;
 }
 
 export type ActiveTabType = 'learn' | 'add' | 'dictionary' | 'profiles';
