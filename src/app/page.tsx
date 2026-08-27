@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/store";
@@ -10,13 +11,29 @@ import WordForm from "@/components/dictionary/WordForm/WordForm";
 import ProfileManager from "@/components/profiles/ProfileManager/ProfileManager";
 import TrainingManager from "@/components/training/TrainingManager/TrainingManager";
 import Loader from "@/components/ui/Loader/Loader";
+
 import styles from "./page.module.scss";
 
 export default function HomePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.loadingScreen}>
+          <div className={styles.loadingContent}>
+            <Loader />
+          </div>
+        </div>
+      }
+    >
+      <HomePageContent />
+    </Suspense>
+  );
+}
+
+function HomePageContent() {
   const { user, loading, error } = useAuth();
   const activeTab = useAppSelector((state) => state.ui.activeTab);
 
-  // Считываем параметры из URL
   const searchParams = useSearchParams();
   const isRegisterRequested = searchParams.get("mode") === "register";
 
@@ -25,18 +42,21 @@ export default function HomePage() {
       <div className={styles.loadingScreen}>
         <div className={styles.loadingContent}>
           <Loader />
+
           <p className={styles.loadingText}>
             Инициализация вашей персональной базы слов...
           </p>
+
           {error && (
-            <p className="text-red-500 mt-4">Ошибка Firebase: {error}</p>
+            <p className="text-red-500 mt-4">
+              Ошибка Firebase: {error}
+            </p>
           )}
         </div>
       </div>
     );
   }
 
-  // Если не авторизован — показываем AuthForm с нужным режимом
   if (!user) {
     return (
       <div className={styles.authWrapper}>

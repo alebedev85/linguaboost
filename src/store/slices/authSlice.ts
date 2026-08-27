@@ -9,6 +9,7 @@ interface AuthState {
 }
 
 const rawAdminEmails = process.env.NEXT_PUBLIC_ADMIN_EMAILS || '';
+console.log('Admin emails from env:', rawAdminEmails); // Логируем для отладки
 const ADMIN_EMAILS = rawAdminEmails
   .split(',')
   .map((email) => email.trim().toLowerCase())
