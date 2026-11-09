@@ -3272,10 +3272,10 @@ node-addon-api@^7.0.0:
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-7.1.1.tgz#1aba6693b0f255258a049d621329329322aad558"
   integrity sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==
 
-node-edge-tts@^1.2.10:
-  version "1.2.10"
-  resolved "https://registry.yarnpkg.com/node-edge-tts/-/node-edge-tts-1.2.10.tgz#158f2b22c360764d1336d881fe97bdf6c5fe7233"
-  integrity sha512-bV2i4XU54D45+US0Zm1HcJRkifuB3W438dWyuJEHLQdKxnuqlI1kim2MOvR6Q3XUQZvfF9PoDyR1Rt7aeXhPdQ==
+node-edge-tts@^1.2.12:
+  version "1.2.12"
+  resolved "https://registry.yarnpkg.com/node-edge-tts/-/node-edge-tts-1.2.12.tgz#ed17a7e3bc3555d344af8826ddbceb807d48a829"
+  integrity sha512-tvopsQ+XkxHGHM58GUVDM7iwzxVivjqSJb948xg2F0q9r+OWO7bSrJkHnJ0e7BPTxhPiTrxK+9zsl4CL5H5KbQ==
   dependencies:
     https-proxy-agent "^7.0.1"
     ws "^8.13.0"

@@ -84,13 +84,17 @@ export function useGeminiTTS() {
               ? err.message
               : "Не удалось сгенерировать озвучку",
             type: "error",
-          }) as any
+          }) as any,
         );
 
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        window.speechSynthesis.speak(utterance);
+        
         setIsPlaying(false);
       }
     },
-    [dispatch] // Сюда больше не нужен apiKey, хук максимально автономен!
+    [dispatch], // Сюда больше не нужен apiKey, хук максимально автономен!
   );
 
   return { speak, isPlaying };

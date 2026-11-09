@@ -14,7 +14,7 @@ async function generateViaHuggingFace(promptForFlux: string) {
 
   try {
     const imageBlob = (await client.textToImage({
-      provider: "nscale",
+      provider: "auto",
       model: "black-forest-labs/FLUX.1-schnell",
       inputs: prompt,
       parameters: { num_inference_steps: 4 },
