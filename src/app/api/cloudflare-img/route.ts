@@ -5,27 +5,39 @@ const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 const CF_IMAGE_MODEL =
   process.env.CLOUDFLARE_IMAGE_MODEL || "@cf/black-forest-labs/flux-1-schnell";
 
-type CloudflareErrorCode =
+function parseAdminEmails(): string[] {
+  const rawList = process.env.ADMIN_EMAILS || process.env.NEXT_PUBLIC_ADMIN_EMAILS || "";
+  return rawList
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+const ADMIN_EMAILS = parseAdminEmails();
+
+type ImageErrorCode =
   | "BAD_REQUEST"
   | "MISSING_CONFIG"
   | "AUTH_ERROR"
   | "QUOTA_EXCEEDED"
   | "RATE_LIMITED"
+  | "NSFW_BLOCKED"
   | "NETWORK_ERROR"
   | "INVALID_JSON"
   | "NO_IMAGE_DATA"
   | "UPSTREAM_ERROR"
+  | "GENERATION_FAILED"
   | "INTERNAL_ERROR";
 
-class CloudflareImageError extends Error {
+class ImageRouteError extends Error {
   status: number;
-  code: CloudflareErrorCode;
+  code: ImageErrorCode;
   retryAfter?: string | null;
 
   constructor(
     message: string,
     status: number,
-    code: CloudflareErrorCode,
+    code: ImageErrorCode,
     retryAfter?: string | null
   ) {
     super(message);
@@ -35,16 +47,21 @@ class CloudflareImageError extends Error {
   }
 }
 
-function buildIllustrationPrompt(rawPrompt: string): string {
-  return `A single isolated 2D flat vector illustration representing the meaning of "${rawPrompt}", no text, no watermarks`;
+function buildCloudflarePrompt(rawPrompt: string): string {
+  return `A single isolated 2D flat vector illustration representing the concept "${rawPrompt}", no text, no watermarks`;
+}
+
+function buildPollinationsPrompt(rawPrompt: string): string {
+  return `Simple flat vector illustration of ${rawPrompt}, no text, no watermarks`;
 }
 
 function classifyCloudflareFailure(
   httpStatus: number,
   rawBody: string,
   parsedJson: any,
-  retryAfter: string | null
-): CloudflareImageError {
+  retryAfter: string | null,
+  rawPrompt: string
+): ImageRouteError {
   const apiErrors: Array<{ code?: number; message?: string }> = Array.isArray(
     parsedJson?.errors
   )
@@ -61,6 +78,17 @@ function classifyCloudflareFailure(
     "Неизвестная ошибка Cloudflare Workers AI";
 
   const lower = combinedMessage.toLowerCase();
+
+  const isNsfwBlocked =
+    apiErrors.some((err) => err?.code === 8007) || lower.includes("nsfw");
+  if (isNsfwBlocked) {
+    return new ImageRouteError(
+      `Фильтр Cloudflare заблокировал промпт для "${rawPrompt}" (код 8007): ${combinedMessage}`,
+      422,
+      "NSFW_BLOCKED"
+    );
+  }
+
   const hasQuotaErrorCode = apiErrors.some((err) => err?.code === 4006);
   const isDailyQuotaExhausted =
     hasQuotaErrorCode ||
@@ -70,16 +98,16 @@ function classifyCloudflareFailure(
 
   if (httpStatus === 429) {
     if (isDailyQuotaExhausted) {
-      return new CloudflareImageError(
-        `Исчерпан дневной лимит Neurons в Cloudflare Workers AI (сброс в 00:00 UTC): ${combinedMessage}`,
+      return new ImageRouteError(
+        `Исчерпан дневной лимит Neurons в Cloudflare Workers AI: ${combinedMessage}`,
         429,
         "QUOTA_EXCEEDED",
         retryAfter
       );
     }
 
-    return new CloudflareImageError(
-      `Слишком много запросов к Cloudflare Workers AI (rate limit): ${combinedMessage}`,
+    return new ImageRouteError(
+      `Rate limit Cloudflare Workers AI: ${combinedMessage}`,
       429,
       "RATE_LIMITED",
       retryAfter
@@ -87,30 +115,29 @@ function classifyCloudflareFailure(
   }
 
   if (httpStatus === 401 || httpStatus === 403) {
-    return new CloudflareImageError(
-      `Ошибка авторизации Cloudflare (проверь CLOUDFLARE_API_TOKEN и права Workers AI): ${combinedMessage}`,
+    return new ImageRouteError(
+      `Ошибка авторизации Cloudflare Workers AI: ${combinedMessage}`,
       httpStatus,
       "AUTH_ERROR"
     );
   }
 
-  const mappedStatus =
-    httpStatus >= 400 && httpStatus < 500 ? httpStatus : 502;
-
-  return new CloudflareImageError(
+  const status = httpStatus >= 400 && httpStatus < 500 ? httpStatus : 502;
+  return new ImageRouteError(
     `Ошибка Cloudflare Workers AI (${httpStatus}): ${combinedMessage}`,
-    mappedStatus,
+    status,
     "UPSTREAM_ERROR"
   );
 }
 
-async function generateWithCloudflare(rawPrompt: string): Promise<{
+// Провайдер 1 (PRO): Cloudflare Workers AI (flux-1-schnell)
+async function generateViaCloudflare(rawPrompt: string): Promise<{
   imageBase64: string;
   mimeType: string;
 }> {
   if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_API_TOKEN) {
-    throw new CloudflareImageError(
-      "Не заданы CLOUDFLARE_ACCOUNT_ID или CLOUDFLARE_API_TOKEN в переменных окружения",
+    throw new ImageRouteError(
+      "Не заданы CLOUDFLARE_ACCOUNT_ID или CLOUDFLARE_API_TOKEN",
       500,
       "MISSING_CONFIG"
     );
@@ -129,15 +156,14 @@ async function generateWithCloudflare(rawPrompt: string): Promise<{
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: buildIllustrationPrompt(rawPrompt),
+        prompt: buildCloudflarePrompt(rawPrompt),
         steps: 4,
       }),
     });
   } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : "Неизвестная сетевая ошибка";
-    throw new CloudflareImageError(
-      `Сетевая ошибка при обращении к Cloudflare Workers AI: ${message}`,
+    const message = err instanceof Error ? err.message : "Сетевая ошибка";
+    throw new ImageRouteError(
+      `Сетевая ошибка Cloudflare Workers AI: ${message}`,
       502,
       "NETWORK_ERROR"
     );
@@ -151,7 +177,7 @@ async function generateWithCloudflare(rawPrompt: string): Promise<{
     parsedJson = JSON.parse(rawText);
   } catch {
     if (response.ok) {
-      throw new CloudflareImageError(
+      throw new ImageRouteError(
         "Cloudflare Workers AI вернул некорректный JSON",
         502,
         "INVALID_JSON"
@@ -164,23 +190,23 @@ async function generateWithCloudflare(rawPrompt: string): Promise<{
       response.status,
       rawText,
       parsedJson,
-      retryAfter
+      retryAfter,
+      rawPrompt
     );
   }
 
-  const base64Image = parsedJson?.result?.image;
-  if (typeof base64Image !== "string" || base64Image.trim().length === 0) {
-    throw new CloudflareImageError(
+  const rawImage = parsedJson?.result?.image;
+  if (typeof rawImage !== "string" || rawImage.trim().length === 0) {
+    throw new ImageRouteError(
       "В ответе Cloudflare Workers AI отсутствует result.image",
       422,
       "NO_IMAGE_DATA"
     );
   }
 
-  // На случай если строка уже содержит data URI prefix
-  const normalizedBase64 = base64Image.includes(",")
-    ? base64Image.split(",")[1]
-    : base64Image;
+  const normalizedBase64 = rawImage.includes(",")
+    ? rawImage.split(",")[1]
+    : rawImage;
 
   return {
     imageBase64: normalizedBase64,
@@ -188,57 +214,139 @@ async function generateWithCloudflare(rawPrompt: string): Promise<{
   };
 }
 
+// Провайдер 2 (Standard / Fallback): Pollinations.ai
+async function generateViaPollinations(rawPrompt: string): Promise<{
+  imageBase64: string;
+  mimeType: string;
+} | null> {
+  try {
+    const prompt = buildPollinationsPrompt(rawPrompt);
+    const seed = Math.floor(Math.random() * 1000000);
+    const url = `https://image.pollinations.ai/p/${encodeURIComponent(
+      prompt
+    )}?width=512&height=512&nologo=true&model=flux&seed=${seed}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error("🔴 [Pollinations Error] HTTP:", response.status);
+      return null;
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    if (!arrayBuffer.byteLength) return null;
+
+    return {
+      imageBase64: Buffer.from(arrayBuffer).toString("base64"),
+      mimeType: response.headers.get("content-type") || "image/jpeg",
+    };
+  } catch (error) {
+    console.error("🔴 [Pollinations Error]:", error);
+    return null;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => null);
     const promptForFlux =
       typeof body?.promptForFlux === "string" ? body.promptForFlux.trim() : "";
+    const userEmail =
+      typeof body?.userEmail === "string" ? body.userEmail.trim().toLowerCase() : "";
 
     if (!promptForFlux) {
       return NextResponse.json(
         {
           error: "Не передан обязательный параметр promptForFlux",
-          code: "BAD_REQUEST" satisfies CloudflareErrorCode,
+          code: "BAD_REQUEST" satisfies ImageErrorCode,
         },
         { status: 400 }
       );
     }
 
-    const { imageBase64, mimeType } = await generateWithCloudflare(promptForFlux);
+    const isAdmin = Boolean(userEmail) && ADMIN_EMAILS.includes(userEmail);
 
-    return NextResponse.json({
-      imageBase64,
-      mimeType,
-      model: CF_IMAGE_MODEL,
-      provider: "cloudflare-workers-ai",
-    });
-  } catch (err: unknown) {
-    if (err instanceof CloudflareImageError) {
-      console.error(`🔴 [${err.code}] (${err.status}): ${err.message}`);
+    if (isAdmin) {
+      console.log(`⚡ PRO-режим (${userEmail}): генерация через Cloudflare Workers AI`);
 
-      const headers = new Headers();
-      if (err.retryAfter) {
-        headers.set("Retry-After", err.retryAfter);
+      try {
+        const cfResult = await generateViaCloudflare(promptForFlux);
+        return NextResponse.json({
+          imageBase64: cfResult.imageBase64,
+          mimeType: cfResult.mimeType,
+          provider: "cloudflare-workers-ai",
+          model: CF_IMAGE_MODEL,
+          isProMode: true,
+        });
+      } catch (cfError: unknown) {
+        const code =
+          cfError instanceof ImageRouteError ? cfError.code : "UPSTREAM_ERROR";
+        const message =
+          cfError instanceof Error ? cfError.message : "Ошибка Cloudflare Workers AI";
+
+        console.warn(
+          `⚠️ Ошибка PRO-генерации [${code}]: ${message}. Переключаемся на Pollinations...`
+        );
+
+        const fallbackResult = await generateViaPollinations(promptForFlux);
+        if (fallbackResult) {
+          return NextResponse.json({
+            imageBase64: fallbackResult.imageBase64,
+            mimeType: fallbackResult.mimeType,
+            provider: "pollinations",
+            isProMode: false,
+            fallbackReason: code,
+          });
+        }
+
+        // Если и fallback не справился — отдаём диагностику ошибки Cloudflare
+        if (cfError instanceof ImageRouteError) {
+          return NextResponse.json(
+            { error: cfError.message, code: cfError.code },
+            { status: cfError.status }
+          );
+        }
+
+        return NextResponse.json(
+          {
+            error: "Не удалось сгенерировать изображение ни через Cloudflare, ни через Pollinations",
+            code: "GENERATION_FAILED" satisfies ImageErrorCode,
+          },
+          { status: 502 }
+        );
       }
+    }
 
+    // Обычный пользователь или гость -> сразу Pollinations.ai
+    console.log(
+      `🌱 Обычный режим (${userEmail || "гость"}): генерация через Pollinations`
+    );
+    const pollinationsResult = await generateViaPollinations(promptForFlux);
+
+    if (!pollinationsResult) {
       return NextResponse.json(
         {
-          error: err.message,
-          code: err.code,
-          ...(err.retryAfter ? { retryAfter: err.retryAfter } : {}),
+          error: "Не удалось сгенерировать изображение через Pollinations.ai",
+          code: "GENERATION_FAILED" satisfies ImageErrorCode,
         },
-        { status: err.status, headers }
+        { status: 502 }
       );
     }
 
+    return NextResponse.json({
+      imageBase64: pollinationsResult.imageBase64,
+      mimeType: pollinationsResult.mimeType,
+      provider: "pollinations",
+      isProMode: false,
+    });
+  } catch (err: unknown) {
     const message =
-      err instanceof Error ? err.message : "Непредвиденная ошибка сервера";
+      err instanceof Error ? err.message : "Внутренняя ошибка сервера";
     console.error("🔴 [INTERNAL_ERROR] (500):", message);
 
     return NextResponse.json(
       {
         error: message,
-        code: "INTERNAL_ERROR" satisfies CloudflareErrorCode,
+        code: "INTERNAL_ERROR" satisfies ImageErrorCode,
       },
       { status: 500 }
     );
