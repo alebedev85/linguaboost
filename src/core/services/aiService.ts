@@ -58,7 +58,7 @@ export const aiService = {
   },
 
   /**
-   * Запрашивает фоновую генерацию изображения у нашего Next API (/api/generate-image)
+   * Запрашивает фоновую генерацию изображения у нашего Next API (/api/cloudflare-img)
    * Возвращает готовую Base64 строку или null в случае неудачи
    */
   async getImageForWord(
@@ -71,10 +71,11 @@ export const aiService = {
     try {
       // 🔥 Изменили ключ отправки на visualPrompt, чтобы бэкенд Next.js его сразу подхватил
       const response = await axios.post<ApiImageResponse>(
-        "/api/generate-imagen",
+        "/api/cloudflare-img",
         {
           // promptForFlux: visualPrompt ? `the ${word.trim()} is ${visualPrompt.trim()}` : word.trim(),
-          promptForFlux: visualPrompt?.trim() || word.trim(),
+          // promptForFlux: visualPrompt?.trim() || word.trim(),
+          promptForFlux: word.trim(),
           userEmail: userEmail,
         },
       );
