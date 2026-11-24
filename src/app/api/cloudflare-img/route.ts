@@ -48,7 +48,7 @@ class ImageRouteError extends Error {
 }
 
 function buildCloudflarePrompt(rawPrompt: string): string {
-  return `A single isolated 2D flat vector illustration representing the concept "${rawPrompt}", no text, no watermarks`;
+  return `No text, no watermarks, only single isolated 2D flat vector illustration representing the concept "${rawPrompt}"`;
 }
 
 function buildPollinationsPrompt(rawPrompt: string): string {
